@@ -9,8 +9,8 @@
 
 #import "MAFileImageSourceModel.h"
 
-// constants
-NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain";
+// error domain
+NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionErrorDomain";
 
 @interface MAImageDescription ()
 
@@ -37,7 +37,7 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
 #pragma mark - helpers
 
 - (NSString *)resultImageName {
-    NSMutableString *imageName = [NSMutableString stringWithString:self.sourceModel.resultImageName ?: @""];
+    NSMutableString *imageName = [NSMutableString stringWithString:self.sourceModel.sourceName ?: @""];
     for (id <MAImageTransformation> transformation in self.transformations) {
         [imageName appendFormat:@"%@%@", imageName.length ? @"_" : @"", transformation.transformationName];
     }

@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "MAImageSource.h"
 #import "MAImageTransformation.h"
+#import "MAErrors.h"
 
 /**
  *  Describes an image source and transformations. 
@@ -18,7 +19,7 @@
 // Image source (file, URL, other)
 @property (nonatomic, strong) id <MAImageSource>                    sourceModel;
 
-// Transformations, could be nil or empty
+// Transformations, could be nil
 @property (nonatomic, readonly) NSArray                             *transformations;
 
 // Default is `temporary_folder/sourceModel_transformation1_..._transformationN`
@@ -29,8 +30,6 @@
 // If there is no operation queue with `loadingQueueAlias` then new queue will be created.
 // See `MAImageProducer` for more details.
 @property (nonatomic, strong) NSString                              *loadingQueueAlias;
-
-// TODO: what about original image file path?
 
 // initialization
 - (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel

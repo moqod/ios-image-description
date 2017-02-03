@@ -25,7 +25,7 @@
     return self;
 }
 
-- (NSString *)resultImageName {
+- (NSString *)sourceName {
     return [NSString stringWithFormat:@"%@_%.2fx%.2f_%@", self.photoAsset.localIdentifier, self.targetSize.width, self.targetSize.height, @( self.contentMode )];
 }
 

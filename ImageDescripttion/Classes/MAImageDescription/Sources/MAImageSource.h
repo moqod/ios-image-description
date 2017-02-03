@@ -8,21 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-// errors
-extern NSString *const MAImageSourceErrorDomain;
-
-typedef NS_ENUM(NSInteger, ASImageSourceError) {
-    MAImageSourceErrorFileDoesNotExist = 1,
-    MAImageSourceErrorFileIsNotAnImage = 2,
-};
-
 @protocol MAImageSource <NSObject>
 
+@property (nonatomic, readonly) NSString                    *sourceName;
 
-@property (nonatomic, readonly) NSString                    *resultImageName;
-
-// Perfroms action in background thread
-// Completion called in Main thread
+// Could perform action on background thread
+// Completion called on main thread
 - (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
 
 @end

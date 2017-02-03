@@ -8,6 +8,7 @@
 
 #import "MAURLImageSourceModel.h"
 #import "MAImageHelper.h"
+#import "MAErrors.h"
 
 static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
 
@@ -43,12 +44,12 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     return self;
 }
 
-- (NSString *)resultImageName {
+- (NSString *)sourceName {
     return self.imageFileName;
 }
 
 - (NSString *)cachedImageFilePath {
-    return [self.destinationDirectoryPath stringByAppendingPathComponent:self.resultImageName];
+    return [self.destinationDirectoryPath stringByAppendingPathComponent:self.sourceName];
 }
 
 // block to return UIImage
@@ -100,7 +101,7 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     NSError *error = nil;
     if (!image) {
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedImageFilePath] error:nil];
-        error = [NSError errorWithDomain:MAImageSourceErrorDomain code:MAImageSourceErrorFileIsNotAnImage userInfo:nil];
+        error = [NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorFileIsNotAnImage userInfo:nil];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{

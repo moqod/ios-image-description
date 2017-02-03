@@ -59,6 +59,7 @@
 		79535B531E44FDB400635002 /* MAAssetImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAAssetImageSourceModel.h; sourceTree = "<group>"; };
 		79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAssetImageSourceModel.m; sourceTree = "<group>"; };
 		79535B551E44FDB400635002 /* MAImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageSource.h; sourceTree = "<group>"; };
+		79535B591E4512D700635002 /* MAErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAErrors.h; sourceTree = "<group>"; };
 		79E71C0C1E44F4D60066B4D1 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,6 +142,7 @@
 				7902F1AB1E30E6FD00017320 /* Producer */,
 				7902F1B01E30E6FD00017320 /* Sources */,
 				7902F1B81E30E6FD00017320 /* View */,
+				79535B591E4512D700635002 /* MAErrors.h */,
 			);
 			path = MAImageDescription;
 			sourceTree = "<group>";

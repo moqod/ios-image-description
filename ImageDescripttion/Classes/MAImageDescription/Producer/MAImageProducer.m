@@ -33,35 +33,17 @@
     return self;
 }
 
-#pragma mark - queue stuff
+#pragma mark - helpers
 
-- (NSOperationQueue *)operationQueueForKey:(NSString *)key maxConcurrentOperations:(NSInteger)maxConcurrentOperations {
-    NSOperationQueue *queue = self.queuesDictionary[key];
-    if (!queue) {
-        queue = [NSOperationQueue new];
-        queue.maxConcurrentOperationCount = maxConcurrentOperations;
-        self.queuesDictionary[key] = queue;
-    }
-    return queue;
+- (BOOL)isCacheExistForImageDescrition:(MAImageDescription *)imageDescription {
+    return [[NSFileManager defaultManager] fileExistsAtPath:imageDescription.imageFilePath];
 }
 
-- (NSOperationQueue *)originalSourceOperationQueueWithAlias:(NSString *)alias {
-    alias = alias ?: @"default";
-    return [self operationQueueForKey:alias maxConcurrentOperations:1];
-}
-
-- (NSOperationQueue *)cacheOperationQueueWithAlias:(NSString *)alias {
-    alias = alias ?: @"default";
-    alias = [alias stringByAppendingString:@".cache"];
-    return [self operationQueueForKey:alias maxConcurrentOperations:2];
-}
-
-#pragma mark -
+#pragma mark - public
 
 - (void)produceImageWithDescription:(MAImageDescription *)imageDescription {
     if (imageDescription) {
-        
-        NSOperationQueue *relevantQueue = [self originalSourceOperationQueueWithAlias:imageDescription.loadingQueueAlias];
+        NSOperationQueue *relevantQueue = [self relevantOperationQueueForImageDescription:imageDescription];
         MAImageDescriptionLoadingOperation *operation = [MAImageDescriptionLoadingOperation operationWithDescription:imageDescription];
         operation.delegate = self;
         [relevantQueue addOperation:operation];
@@ -69,7 +51,7 @@
 }
 
 - (void)cancelProducingImageWithDescription:(MAImageDescription *)imageDescription {
-    NSOperationQueue *relevantQueue = [self originalSourceOperationQueueWithAlias:imageDescription.loadingQueueAlias];
+    NSOperationQueue *relevantQueue = [self relevantOperationQueueForImageDescription:imageDescription];
     for (MAImageDescriptionLoadingOperation *operation in relevantQueue.operations) {
         // user could swipe images left - right, easy implementation
         if ([operation.imageDescription isEqual:imageDescription] && !operation.isCancelled) {
@@ -94,6 +76,34 @@
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:image forKey:@"result"];
     [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
+}
+
+#pragma mark - queue stuff
+
+- (NSOperationQueue *)operationQueueForKey:(NSString *)key maxConcurrentOperations:(NSInteger)maxConcurrentOperations {
+    NSOperationQueue *queue = self.queuesDictionary[key];
+    if (!queue) {
+        queue = [NSOperationQueue new];
+        queue.maxConcurrentOperationCount = maxConcurrentOperations;
+        self.queuesDictionary[key] = queue;
+    }
+    return queue;
+}
+
+- (NSOperationQueue *)originalSourceOperationQueueWithAlias:(NSString *)alias {
+    return [self operationQueueForKey:(alias ?: @"default") maxConcurrentOperations:1];
+}
+
+- (NSOperationQueue *)cacheOperationQueueWithAlias:(NSString *)alias {
+    return [self operationQueueForKey:[(alias ?: @"default") stringByAppendingString:@".cache"] maxConcurrentOperations:2];
+}
+
+- (NSOperationQueue *)relevantOperationQueueForImageDescription:(MAImageDescription *)imageDescription {
+    if ([self isCacheExistForImageDescrition:imageDescription]) {
+        return [self cacheOperationQueueWithAlias:imageDescription.loadingQueueAlias];
+    } else {
+        return [self originalSourceOperationQueueWithAlias:imageDescription.loadingQueueAlias];
+    }
 }
 
 @end
