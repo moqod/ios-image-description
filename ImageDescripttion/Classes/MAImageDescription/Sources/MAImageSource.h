@@ -16,17 +16,13 @@ typedef NS_ENUM(NSInteger, ASImageSourceError) {
     MAImageSourceErrorFileIsNotAnImage = 2,
 };
 
-typedef void (^MAImageCompletionBlock_t)(UIImage *image, NSError *error);
-
 @protocol MAImageSource <NSObject>
 
 @required
 @property (nonatomic, readonly) NSString                    *resultImageName;
 
 // Perfroms action in background thread, completion called in main thread always
-- (void)imageWithCompletion:(MAImageCompletionBlock_t)completion;
-
-- (BOOL) isEqualToImageSource:(id<MAImageSource>)model;
+- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
 
 @optional
 // YES if not implemented

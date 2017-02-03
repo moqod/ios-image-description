@@ -13,7 +13,7 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
 
 @interface MAURLImageSourceModel () <NSURLSessionDelegate>
 
-@property (nonatomic, copy) MAImageCompletionBlock_t completion;
+@property (nonatomic, copy) void (^completion)(UIImage *, NSError *);
 
 @end
 
@@ -56,7 +56,7 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
 }
 
 // block to return UIImage
-- (void)imageWithCompletion:(MAImageCompletionBlock_t)completion {
+- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion {
     self.completion = completion;
     
     
@@ -115,7 +115,7 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     });
 }
 
-- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error completion:(MAImageCompletionBlock_t)completion {
+- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error completion:(void (^)(UIImage *image, NSError *error))completion {
     if (completion) {
         completion(image, error);
     }

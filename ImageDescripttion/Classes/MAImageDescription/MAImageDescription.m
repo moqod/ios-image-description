@@ -8,7 +8,6 @@
 #import "MAImageDescription.h"
 
 #import "MAFileImageSourceModel.h"
-#import "MAResizeImageDecorator.h"
 
 // constants
 NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain";
@@ -17,25 +16,25 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
 
 #pragma mark - initialization
 
-- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel decorators:(NSArray *)decorators {
+- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel transformations:(NSArray *)transformations {
     self = [super init];
     if (self) {
-        self.decorators = (id)decorators; //(id) - make compiler happy :)
+        self.transformations = (id)transformations; //(id) - make compiler happy :)
         self.sourceModel = sourceModel;
     }
     return self;
 }
 
 + (instancetype)descriptionWithImageNamed:(NSString *)fileName {
-    return [[self alloc] initWithSourceModel:[MAFileImageSourceModel sourceWithImageNamed:fileName] decorators:nil];
+    return [[self alloc] initWithSourceModel:[MAFileImageSourceModel sourceWithImageNamed:fileName] transformations:nil];
 }
 
 #pragma mark - image name
 
 - (NSString *)resultImageName {
     NSMutableString *imageName = [NSMutableString stringWithString:self.sourceModel.resultImageName ?: @""];
-    for (id <MAImageDecorator> decorator in self.decorators) {
-        [imageName appendFormat:@"%@%@", imageName.length ? @"_" : @"", decorator.transformName];
+    for (id <MAImageTransformation> transformation in self.transformations) {
+        [imageName appendFormat:@"%@%@", imageName.length ? @"_" : @"", transformation.transformationName];
     }
     return imageName;
 }
@@ -63,7 +62,7 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
     return [[NSFileManager defaultManager] fileExistsAtPath:[self resultImageFilePath]];
 }
 
-- (void)imageWithCompletion:(MAImageCompletionBlock_t)completion {
+- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion {
     if (!self.sourceModel) {
         [self callCompletionWithImage:nil error:nil fromCache:NO completion:completion];
     } else {
@@ -75,12 +74,12 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
             }];
         } else {
             [self.sourceModel imageWithCompletion:^(UIImage *image, NSError *error) {
-                if (self.decorators.count) {
+                if (self.transformations.count) {
                     if (!error) {
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                             UIImage *decoratedImage = image;
-                            for (id <MAImageDecorator> decorator in self.decorators) {
-                                decoratedImage = [decorator decoratedImage:decoratedImage];
+                            for (id <MAImageTransformation> decorator in self.transformations) {
+                                decoratedImage = [decorator applyTransformation:decoratedImage];
                             }
                             
                             // save decorated image
@@ -102,7 +101,7 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
     }
 }
 
-- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error fromCache:(BOOL)fromCache completion:(MAImageCompletionBlock_t)completion {
+- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error fromCache:(BOOL)fromCache completion:(void (^)(UIImage *image, NSError *error))completion {
     if (completion) {
         completion(image, error);
     }

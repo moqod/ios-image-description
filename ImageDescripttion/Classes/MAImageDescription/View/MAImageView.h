@@ -9,12 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MAImageDescription.h"
 
-#import "MAURLImageSourceModel.h"
-#import "MAAssetImageSourceModel.h"
-
-#import "MAResizeImageDecorator.h"
-#import "MACornerImageDecorator.h"
-
 @class MAImageView;
 @protocol MAImageViewDelegate <NSObject>
 

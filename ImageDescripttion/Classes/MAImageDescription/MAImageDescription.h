@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MAImageSource.h"
-#import "MAImageDecorator.h"
+#import "MAImageTransformation.h"
 
 /**
  *  Images Loading, creation and decorating with just a few code lines. Lovely!
@@ -18,8 +18,8 @@
 // Image source (file, URL, other)
 @property (nonatomic, strong) id <MAImageSource>            sourceModel;
 
-// Decorators, could be nil or empty
-@property (nonatomic, strong) NSArray               <MAImageDecorator> *decorators;
+// Transformations, could be nil or empty
+@property (nonatomic, strong) NSArray               <MAImageTransformation> *transformations;
 
 // Composite result image name, also uses as notification name
 @property (nonatomic, readonly) NSString                    *resultImageName;
@@ -28,13 +28,13 @@
 @property (nonatomic, readonly) NSString                    *resultImageFilePath;
 
 // initialization
-- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel decorators:(NSArray *)decorators;
+- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel transformations:(NSArray *)transformations;
 
 // Useful for loading images from bundle (creates file source model like `[UIImage imageNamed:fileName]`
 + (instancetype)descriptionWithImageNamed:(NSString *)fileName;
 
 // produces an image
-- (void)imageWithCompletion:(MAImageCompletionBlock_t)completion;
+- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
 - (BOOL)cacheExists;
 
 @end

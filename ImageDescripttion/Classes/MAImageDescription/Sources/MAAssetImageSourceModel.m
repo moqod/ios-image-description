@@ -10,7 +10,7 @@
 
 @interface MAAssetImageSourceModel ()
 
-@property (nonatomic, copy) MAImageCompletionBlock_t completion;
+@property (nonatomic, copy) void (^completion)(UIImage *, NSError *);
 
 @end
 
@@ -56,7 +56,7 @@
                                                   }];
 }
 
-- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error completion:(MAImageCompletionBlock_t)completion {
+- (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error completion:(void (^)(UIImage *image, NSError *error))completion {
     if (completion) {
         if ([NSThread isMainThread]) {
             completion(image, error);

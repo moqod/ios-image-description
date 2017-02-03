@@ -9,6 +9,10 @@
 #import "ViewController.h"
 #import "MAImageView.h"
 
+#import "MAFileImageSourceModel.h"
+#import "MAResizeImageTransformation.h"
+#import "MACornerImageTransformation.h"
+
 @interface ViewController () <MAImageViewDelegate>
 
 @property (nonatomic, readonly) MAImageView     *imageView;
@@ -25,11 +29,11 @@
     self.imageView.delegate = self;
     [self.view addSubview:self.imageView];
     
-    MAURLImageSourceModel *sourceModel = [[MAURLImageSourceModel alloc] initWithURL:[NSURL URLWithString:@"https://upload.wikimedia.org/wikipedia/commons/5/58/Large_Pinus_glabra.jpg"]];
-    MAResizeImageDecorator *resizeDecorator = [[MAResizeImageDecorator alloc] initWithSize:self.imageView.bounds.size];
-    MACornerImageDecorator *cornerDecorator = [[MACornerImageDecorator alloc] initWithCorners:UIRectCornerTopLeft | UIRectCornerBottomRight radius:self.imageView.bounds.size.width * 0.4f];
+    MAFileImageSourceModel *sourceModel = [MAFileImageSourceModel sourceWithImageNamed:@"image.png"];
+    MAResizeImageTransformation *resizeDecorator = [MAResizeImageTransformation transformationWithSize:self.imageView.bounds.size];
+    MACornerImageTransformation *cornerDecorator = [[MACornerImageTransformation alloc] initWithCorners:UIRectCornerTopLeft | UIRectCornerBottomRight radius:self.imageView.bounds.size.width * 0.4f];
     
-    MAImageDescription *imageDescription = [[MAImageDescription alloc] initWithSourceModel:sourceModel decorators: @[ resizeDecorator, cornerDecorator ]];
+    MAImageDescription *imageDescription = [[MAImageDescription alloc] initWithSourceModel:sourceModel transformations: @[ resizeDecorator, cornerDecorator ]];
     [self.imageView setImageDescription:imageDescription animated:YES];
 }
 

@@ -79,7 +79,7 @@
     return YES;
 }
 
-- (void)imageWithCompletion:(MAImageCompletionBlock_t)completion {
+- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         // try to load at provided file path
@@ -117,7 +117,7 @@
     });
 }
 
-- (void)callCompletionOnMainThreadWithImage:(UIImage *)image error:(NSError *)error completion:(MAImageCompletionBlock_t)completion {
+- (void)callCompletionOnMainThreadWithImage:(UIImage *)image error:(NSError *)error completion:(void (^)(UIImage *image, NSError *error))completion {
     if (completion) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(image, error);
