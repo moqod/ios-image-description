@@ -25,6 +25,11 @@
 // Set your own value if suitable
 @property (nonatomic, strong) NSString                              *imageFilePath;
 
+// Default is `default`.
+// If there is no operation queue with `loadingQueueAlias` then new queue will be created.
+// See `MAImageProducer` for more details.
+@property (nonatomic, strong) NSString                              *loadingQueueAlias;
+
 // TODO: what about original image file path?
 
 // initialization

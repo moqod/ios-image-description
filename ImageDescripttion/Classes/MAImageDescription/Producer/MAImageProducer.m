@@ -11,8 +11,7 @@
 
 @interface MAImageProducer () <MAImageDescriptionLoadingOperationDelegate>
 
-@property (nonatomic, readonly) NSOperationQueue        *fastOperationQueue;
-@property (nonatomic, readonly) NSOperationQueue        *slowOperationQueue;
+@property (nonatomic, strong) NSMutableDictionary       *queuesDictionary;
 
 @end
 
@@ -29,22 +28,40 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _fastOperationQueue = [NSOperationQueue new];
-        self.fastOperationQueue.maxConcurrentOperationCount = 1;
-        
-        _slowOperationQueue = [NSOperationQueue new];
-        self.slowOperationQueue.maxConcurrentOperationCount = 1;
+        self.queuesDictionary = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+#pragma mark - queue stuff
+
+- (NSOperationQueue *)operationQueueForKey:(NSString *)key maxConcurrentOperations:(NSInteger)maxConcurrentOperations {
+    NSOperationQueue *queue = self.queuesDictionary[key];
+    if (!queue) {
+        queue = [NSOperationQueue new];
+        queue.maxConcurrentOperationCount = maxConcurrentOperations;
+        self.queuesDictionary[key] = queue;
+    }
+    return queue;
+}
+
+- (NSOperationQueue *)originalSourceOperationQueueWithAlias:(NSString *)alias {
+    alias = alias ?: @"default";
+    return [self operationQueueForKey:alias maxConcurrentOperations:1];
+}
+
+- (NSOperationQueue *)cacheOperationQueueWithAlias:(NSString *)alias {
+    alias = alias ?: @"default";
+    alias = [alias stringByAppendingString:@".cache"];
+    return [self operationQueueForKey:alias maxConcurrentOperations:2];
 }
 
 #pragma mark -
 
 - (void)produceImageWithDescription:(MAImageDescription *)imageDescription {
     if (imageDescription) {
-        BOOL relativelyFast = NO;
         
-        NSOperationQueue *relevantQueue = relativelyFast ? self.fastOperationQueue : self.slowOperationQueue;
+        NSOperationQueue *relevantQueue = [self originalSourceOperationQueueWithAlias:imageDescription.loadingQueueAlias];
         MAImageDescriptionLoadingOperation *operation = [MAImageDescriptionLoadingOperation operationWithDescription:imageDescription];
         operation.delegate = self;
         [relevantQueue addOperation:operation];
@@ -52,9 +69,7 @@
 }
 
 - (void)cancelProducingImageWithDescription:(MAImageDescription *)imageDescription {
-    BOOL relativelyFast = NO;
-    NSOperationQueue *relevantQueue = relativelyFast ? self.fastOperationQueue : self.slowOperationQueue;
-
+    NSOperationQueue *relevantQueue = [self originalSourceOperationQueueWithAlias:imageDescription.loadingQueueAlias];
     for (MAImageDescriptionLoadingOperation *operation in relevantQueue.operations) {
         // user could swipe images left - right, easy implementation
         if ([operation.imageDescription isEqual:imageDescription] && !operation.isCancelled) {

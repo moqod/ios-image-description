@@ -9,6 +9,12 @@
 #import "MAFileImageSourceModel.h"
 #import "MAImageHelper.h"
 
+@interface MAFileImageSourceModel ()
+
+@property (nonatomic, strong) NSString                 *filePath;
+
+@end
+
 @implementation MAFileImageSourceModel
 
 - (NSString *)resultImageName {
@@ -21,13 +27,6 @@
     self = [super init];
     if (self) {
         self.filePath = filePath;
-    }
-    return self;
-}
-- (instancetype)initWithFilePath:(NSString *)filePath andConfigBlock:(MAFileImageSourceModelConfigBlock_t)block {
-    self = [self initWithFilePath:filePath];
-    if (self) {
-        self.configBlock = block;
     }
     return self;
 }
@@ -93,20 +92,12 @@
         } else {
             BOOL configured = NO;
             UIImage *image = nil;
-            if (self.configBlock) {
-                image = self.configBlock(actualFilePath);
-                configured = image != nil;
-            }
             if (!image) {
                 image = [[UIImage alloc] initWithContentsOfFile:actualFilePath];
             }
             if (!image) {
                 [self callCompletionOnMainThreadWithImage:nil error:[NSError errorWithDomain:MAImageSourceErrorDomain code:MAImageSourceErrorFileIsNotAnImage userInfo:nil] completion:completion];
             } else {
-                if (!configured) {
-                    // offscreen decoding & drawing
-                    image = [MAImageHelper offscreenDrawnImage:image];
-                }
                 [self callCompletionOnMainThreadWithImage:image error:nil completion:completion];
             }
         }
@@ -119,15 +110,6 @@
             completion(image, error);
         });
     }
-}
-
-
-- (BOOL)isEqualToImageSource:(id<MAImageSource>)model {
-    if ([model isKindOfClass:self.class]) {
-        MAFileImageSourceModel *urlModel = (id)model;
-        return [urlModel.filePath isEqualToString:self.filePath];
-    }
-    return NO;
 }
 
 @end

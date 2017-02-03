@@ -26,6 +26,7 @@ NSString *const MAImageSourceErrorDomain            = @"MAImageSourceErrorDomain
     if (self = [super init]) {
         self.transformations = transformations;
         self.sourceModel = sourceModel;
+        self.loadingQueueAlias = @"default";
         
         NSString *imageName = [self resultImageName];
         self.imageFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:imageName];

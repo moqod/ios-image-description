@@ -101,8 +101,6 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     if (!image) {
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedImageFilePath] error:nil];
         error = [NSError errorWithDomain:MAImageSourceErrorDomain code:MAImageSourceErrorFileIsNotAnImage userInfo:nil];
-    } else {
-        image = [MAImageHelper offscreenDrawnImage:image];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{

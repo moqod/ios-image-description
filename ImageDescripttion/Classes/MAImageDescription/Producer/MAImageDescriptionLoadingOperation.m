@@ -6,6 +6,7 @@
 //
 
 #import "MAImageDescriptionLoadingOperation.h"
+#import "MAImageHelper.h"
 
 @interface MAImageDescriptionLoadingOperation ()
 
@@ -35,7 +36,10 @@
         [self didChangeValueForKey:@"isExecuting"];
 
         __weak typeof (self) welf = self;
+        
+        // TODO: check for cache plz :)
         [self.imageDescription.sourceModel imageWithCompletion:^(UIImage *image, NSError *error) {
+            
             // TODO: save cache for original image
             // TODO: check for cancelling
             if (!error) {
@@ -46,6 +50,10 @@
                 
                 // save decorated image
                 [welf cacheResultImage:decoratedImage];
+                
+                // draw offscreen
+                decoratedImage = [MAImageHelper offscreenDrawnImage:decoratedImage];
+                
                 [welf notifyDelegateDidLoadImage:decoratedImage error:nil];
                 [welf markOperationCompleted];
             } else {

@@ -8,19 +8,15 @@
 #import <Foundation/Foundation.h>
 #import "MAImageSource.h"
 
-typedef UIImage * (^MAFileImageSourceModelConfigBlock_t)(NSString *path);
-
-
 @interface MAFileImageSourceModel : NSObject <MAImageSource>
 
-@property (nonatomic, strong) NSString                 *filePath;
-@property (nonatomic, copy) MAFileImageSourceModelConfigBlock_t configBlock;
+@property (nonatomic, readonly) NSString                 *filePath;
 
 - (instancetype)initWithFilePath:(NSString *)filePath;
-- (instancetype)initWithFilePath:(NSString *)filePath andConfigBlock:(MAFileImageSourceModelConfigBlock_t)block;
 
 // handy constructors
-+ (instancetype)sourceWithImageNamed:(NSString *)imageName; // uses [[NSBundle mainBundle] pathForResource:imageName ofType:nil]
+// uses [[NSBundle mainBundle] pathForResource:imageName ofType:nil]
++ (instancetype)sourceWithImageNamed:(NSString *)imageName;
 + (instancetype)sourceWithImagePath:(NSString *)imagePath;
 
 @end
