@@ -16,6 +16,8 @@
 
 @implementation MAAssetImageSourceModel
 
+#pragma mark - initialization
+
 - (instancetype)initWithAsset:(PHAsset *)asset targetSize:(CGSize)targetSize {
     if (self = [super init]) {
         _photoAsset = asset;
@@ -24,6 +26,8 @@
     }
     return self;
 }
+
+#pragma mark - MAImageSource
 
 - (NSString *)sourceName {
     return [NSString stringWithFormat:@"%@_%.2fx%.2f_%@", self.photoAsset.localIdentifier, self.targetSize.width, self.targetSize.height, @( self.contentMode )];
@@ -52,6 +56,8 @@
                                                   }];
 }
 
+#pragma mark - helpers
+
 - (void)callCompletionWithImage:(UIImage *)image error:(NSError *)error completion:(void (^)(UIImage *image, NSError *error))completion {
     if (completion) {
         if ([NSThread isMainThread]) {
@@ -62,10 +68,6 @@
             });
         }
     }
-}
-
-- (BOOL) isEqualToImageSource:(id<MAImageSource>)model {
-    return false;
 }
 
 @end

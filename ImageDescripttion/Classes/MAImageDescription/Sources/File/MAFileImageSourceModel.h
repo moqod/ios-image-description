@@ -8,6 +8,9 @@
 #import <Foundation/Foundation.h>
 #import "MAImageSource.h"
 
+/**
+ *  Loads an image at file path.
+ */
 @interface MAFileImageSourceModel : NSObject <MAImageSource>
 
 @property (nonatomic, readonly) NSString                 *filePath;
