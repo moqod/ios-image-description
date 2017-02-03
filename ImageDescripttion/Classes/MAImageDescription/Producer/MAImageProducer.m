@@ -7,9 +7,9 @@
 //
 
 #import "MAImageProducer.h"
-#import "MAImageDescriptionOperation.h"
+#import "MAImageDescriptionLoadingOperation.h"
 
-@interface MAImageProducer ()
+@interface MAImageProducer () <MAImageDescriptionLoadingOperationDelegate>
 
 @property (nonatomic, readonly) NSOperationQueue        *fastOperationQueue;
 @property (nonatomic, readonly) NSOperationQueue        *slowOperationQueue;
@@ -42,27 +42,43 @@
 
 - (void)produceImageWithDescription:(MAImageDescription *)imageDescription {
     if (imageDescription) {
-        BOOL relativelyFast = [imageDescription.sourceModel respondsToSelector:@selector(isRelativelyFast)] ? [imageDescription.sourceModel isRelativelyFast] : YES;
-        if ([imageDescription cacheExists]) {
-            relativelyFast = YES;
-        }
+        BOOL relativelyFast = NO;
         
         NSOperationQueue *relevantQueue = relativelyFast ? self.fastOperationQueue : self.slowOperationQueue;
-        [relevantQueue addOperation:[MAImageDescriptionOperation operationWithDescription:imageDescription]];
+        MAImageDescriptionLoadingOperation *operation = [MAImageDescriptionLoadingOperation operationWithDescription:imageDescription];
+        operation.delegate = self;
+        [relevantQueue addOperation:operation];
     }
 }
 
 - (void)cancelProducingImageWithDescription:(MAImageDescription *)imageDescription {
-    BOOL relativelyFast = [imageDescription.sourceModel respondsToSelector:@selector(isRelativelyFast)] ? [imageDescription.sourceModel isRelativelyFast] : YES;
+    BOOL relativelyFast = NO;
     NSOperationQueue *relevantQueue = relativelyFast ? self.fastOperationQueue : self.slowOperationQueue;
 
-    for (MAImageDescriptionOperation *operation in relevantQueue.operations) {
+    for (MAImageDescriptionLoadingOperation *operation in relevantQueue.operations) {
         // user could swipe images left - right, easy implementation
         if ([operation.imageDescription isEqual:imageDescription] && !operation.isCancelled) {
             [operation cancel];
             break;
         }
     }
+}
+
+#pragma mark - MAImageDescriptionLoadingOperationDelegate
+
+- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didFailWithError:(NSError *)error forImageDescription:(MAImageDescription *)imageDescription {
+    // send notification
+    
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [userInfo setValue:error forKey:@"error"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
+}
+
+- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription {
+    // send notification
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [userInfo setValue:image forKey:@"result"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
 }
 
 @end

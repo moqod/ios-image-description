@@ -18,14 +18,11 @@ typedef NS_ENUM(NSInteger, ASImageSourceError) {
 
 @protocol MAImageSource <NSObject>
 
-@required
+
 @property (nonatomic, readonly) NSString                    *resultImageName;
 
-// Perfroms action in background thread, completion called in main thread always
+// Perfroms action in background thread
+// Completion called in Main thread
 - (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
-
-@optional
-// YES if not implemented
-@property (nonatomic, readonly) BOOL                        isRelativelyFast;
 
 @end

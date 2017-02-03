@@ -23,7 +23,7 @@
 #pragma mark - notifications
 
 - (void)didLoadImageNotification:(NSNotification *)notification {
-    if (![notification.name isEqualToString:self.imageDescription.resultImageName]) {
+    if (![notification.name isEqualToString:self.imageDescription.imageFilePath]) {
         return; // skip outdated notifications
     }
     [self handleImage:notification.userInfo[@"result"] error:notification.userInfo[@"error"] userInfo:notification.userInfo];
@@ -53,7 +53,7 @@
             [self.delegate imageView:self didFailWithError:error];
         }
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:self.imageDescription.resultImageName object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:self.imageDescription.imageFilePath object:nil];
 }
 
 #pragma mark - initialization
@@ -137,18 +137,18 @@
 }
 
 - (void)setImageDescription:(MAImageDescription *)imageDescription animated:(BOOL)animated {
-    if (![_imageDescription.resultImageName isEqualToString:imageDescription.resultImageName]) {
+    if (![_imageDescription.imageFilePath isEqualToString:imageDescription.imageFilePath]) {
         
         self.showImageAnimated = animated;
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:[_imageDescription resultImageName] object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:[_imageDescription imageFilePath] object:nil];
         [[MAImageProducer defaultProducer] cancelProducingImageWithDescription:_imageDescription];
         
         _imageDescription = imageDescription;
         self.image = nil;
         
         if (_imageDescription) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLoadImageNotification:) name:[_imageDescription resultImageName] object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLoadImageNotification:) name:[_imageDescription imageFilePath] object:nil];
             [self loadImageWithDescription];
         }
     }
@@ -166,9 +166,9 @@
             [self.delegate imageViewWillLoadImage:self];
         }
         
-        if (!self.loadsCachedImagesAsynchronusly && [[NSFileManager defaultManager] fileExistsAtPath:self.imageDescription.resultImageFilePath]) {
+        if (!self.loadsCachedImagesAsynchronusly && [[NSFileManager defaultManager] fileExistsAtPath:self.imageDescription.imageFilePath]) {
             self.showImageAnimated = NO;
-            [self handleImage:[UIImage imageWithContentsOfFile:self.imageDescription.resultImageFilePath] error:nil userInfo:@{ @"cache" : @YES }];
+            [self handleImage:[UIImage imageWithContentsOfFile:self.imageDescription.imageFilePath] error:nil userInfo:@{ @"cache" : @YES }];
         } else {
             [[MAImageProducer defaultProducer] produceImageWithDescription:self.imageDescription];
         }

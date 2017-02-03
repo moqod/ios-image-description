@@ -29,10 +29,6 @@
     return [NSString stringWithFormat:@"%@_%.2fx%.2f_%@", self.photoAsset.localIdentifier, self.targetSize.width, self.targetSize.height, @( self.contentMode )];
 }
 
-- (BOOL)isRelativelyFast {
-    return YES;
-}
-
 - (void)imageWithCompletion:(void (^)(UIImage *, NSError *))completion {
     self.completion = completion;
     

@@ -13,9 +13,10 @@
  */
 @protocol MAImageTransformation <NSObject>
 
+// Unique transformation name
 @property (nonatomic, readonly) NSString        *transformationName;
 
-// Applies transformation and return result image.
+// Applies transformation and return result image
 - (UIImage *)applyTransformation:(UIImage *)sourceImage;
 
 @end

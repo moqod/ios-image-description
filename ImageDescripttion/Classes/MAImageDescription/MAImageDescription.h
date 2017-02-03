@@ -10,31 +10,25 @@
 #import "MAImageTransformation.h"
 
 /**
- *  Images Loading, creation and decorating with just a few code lines. Lovely!
- *  Note: Sends notification named `self.resultImageName` through `[NSNotificationCenter defaultCenter]` when completed
+ *  Describes an image source and transformations. 
+ *  Complex images with inline caching in just a few code lines. Lovely!
  */
 @interface MAImageDescription : NSObject
 
 // Image source (file, URL, other)
-@property (nonatomic, strong) id <MAImageSource>            sourceModel;
+@property (nonatomic, strong) id <MAImageSource>                    sourceModel;
 
 // Transformations, could be nil or empty
-@property (nonatomic, strong) NSArray               <MAImageTransformation> *transformations;
+@property (nonatomic, readonly) NSArray                             *transformations;
 
-// Composite result image name, also uses as notification name
-@property (nonatomic, readonly) NSString                    *resultImageName;
+// Default is `temporary_folder/sourceModel_transformation1_..._transformationN`
+// Set your own value if suitable
+@property (nonatomic, strong) NSString                              *imageFilePath;
 
-// Full path to cached file
-@property (nonatomic, readonly) NSString                    *resultImageFilePath;
+// TODO: what about original image file path?
 
 // initialization
-- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel transformations:(NSArray *)transformations;
-
-// Useful for loading images from bundle (creates file source model like `[UIImage imageNamed:fileName]`
-+ (instancetype)descriptionWithImageNamed:(NSString *)fileName;
-
-// produces an image
-- (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
-- (BOOL)cacheExists;
+- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel
+                    transformations:(NSArray *)transformations;
 
 @end

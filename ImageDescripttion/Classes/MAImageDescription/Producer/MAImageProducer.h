@@ -13,6 +13,7 @@
 
 + (instancetype)defaultProducer;
 
+// TODO: implement completion?
 - (void)produceImageWithDescription:(MAImageDescription *)imageDescription;
 - (void)cancelProducingImageWithDescription:(MAImageDescription *)imageDescription;
 

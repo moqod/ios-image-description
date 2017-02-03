@@ -51,10 +51,6 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     return [self.destinationDirectoryPath stringByAppendingPathComponent:self.resultImageName];
 }
 
-- (BOOL)isRelativelyFast {
-    return NO;
-}
-
 // block to return UIImage
 - (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion {
     self.completion = completion;

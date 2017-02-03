@@ -15,14 +15,14 @@
 		7902F19C1E30E6E200017320 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7902F19A1E30E6E200017320 /* Assets.xcassets */; };
 		7902F1BE1E30E6FD00017320 /* MAImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1A81E30E6FD00017320 /* MAImageHelper.m */; };
 		7902F1BF1E30E6FD00017320 /* MAImageDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AA1E30E6FD00017320 /* MAImageDescription.m */; };
-		7902F1C01E30E6FD00017320 /* MAImageDescriptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AD1E30E6FD00017320 /* MAImageDescriptionOperation.m */; };
+		7902F1C01E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AD1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m */; };
 		7902F1C11E30E6FD00017320 /* MAImageProducer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AF1E30E6FD00017320 /* MAImageProducer.m */; };
-		7902F1C21E30E6FD00017320 /* MAAssetImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1B21E30E6FD00017320 /* MAAssetImageSourceModel.m */; };
-		7902F1C31E30E6FD00017320 /* MAFileImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1B41E30E6FD00017320 /* MAFileImageSourceModel.m */; };
-		7902F1C41E30E6FD00017320 /* MAURLImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1B71E30E6FD00017320 /* MAURLImageSourceModel.m */; };
 		7902F1C51E30E6FD00017320 /* MAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1BA1E30E6FD00017320 /* MAImageView.m */; };
 		79535B441E44F87200635002 /* MACornerImageTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B431E44F87200635002 /* MACornerImageTransformation.m */; };
 		79535B471E44F9AC00635002 /* MAResizeImageTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B461E44F9AC00635002 /* MAResizeImageTransformation.m */; };
+		79535B561E44FDB400635002 /* MAURLImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B4E1E44FDB400635002 /* MAURLImageSourceModel.m */; };
+		79535B571E44FDB400635002 /* MAFileImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B511E44FDB400635002 /* MAFileImageSourceModel.m */; };
+		79535B581E44FDB400635002 /* MAAssetImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */; };
 		79E71C0D1E44F4D60066B4D1 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 79E71C0C1E44F4D60066B4D1 /* image.png */; };
 /* End PBXBuildFile section */
 
@@ -41,17 +41,10 @@
 		7902F1A81E30E6FD00017320 /* MAImageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageHelper.m; sourceTree = "<group>"; };
 		7902F1A91E30E6FD00017320 /* MAImageDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageDescription.h; sourceTree = "<group>"; };
 		7902F1AA1E30E6FD00017320 /* MAImageDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageDescription.m; sourceTree = "<group>"; };
-		7902F1AC1E30E6FD00017320 /* MAImageDescriptionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageDescriptionOperation.h; sourceTree = "<group>"; };
-		7902F1AD1E30E6FD00017320 /* MAImageDescriptionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageDescriptionOperation.m; sourceTree = "<group>"; };
+		7902F1AC1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageDescriptionLoadingOperation.h; sourceTree = "<group>"; };
+		7902F1AD1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageDescriptionLoadingOperation.m; sourceTree = "<group>"; };
 		7902F1AE1E30E6FD00017320 /* MAImageProducer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageProducer.h; sourceTree = "<group>"; };
 		7902F1AF1E30E6FD00017320 /* MAImageProducer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageProducer.m; sourceTree = "<group>"; };
-		7902F1B11E30E6FD00017320 /* MAAssetImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAAssetImageSourceModel.h; sourceTree = "<group>"; };
-		7902F1B21E30E6FD00017320 /* MAAssetImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAssetImageSourceModel.m; sourceTree = "<group>"; };
-		7902F1B31E30E6FD00017320 /* MAFileImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAFileImageSourceModel.h; sourceTree = "<group>"; };
-		7902F1B41E30E6FD00017320 /* MAFileImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAFileImageSourceModel.m; sourceTree = "<group>"; };
-		7902F1B51E30E6FD00017320 /* MAImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageSource.h; sourceTree = "<group>"; };
-		7902F1B61E30E6FD00017320 /* MAURLImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAURLImageSourceModel.h; sourceTree = "<group>"; };
-		7902F1B71E30E6FD00017320 /* MAURLImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAURLImageSourceModel.m; sourceTree = "<group>"; };
 		7902F1B91E30E6FD00017320 /* MAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageView.h; sourceTree = "<group>"; };
 		7902F1BA1E30E6FD00017320 /* MAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageView.m; sourceTree = "<group>"; };
 		79535B3F1E44F79700635002 /* MAImageTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageTransformation.h; sourceTree = "<group>"; };
@@ -59,6 +52,13 @@
 		79535B431E44F87200635002 /* MACornerImageTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MACornerImageTransformation.m; sourceTree = "<group>"; };
 		79535B451E44F9AC00635002 /* MAResizeImageTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAResizeImageTransformation.h; sourceTree = "<group>"; };
 		79535B461E44F9AC00635002 /* MAResizeImageTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAResizeImageTransformation.m; sourceTree = "<group>"; };
+		79535B4D1E44FDB400635002 /* MAURLImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAURLImageSourceModel.h; sourceTree = "<group>"; };
+		79535B4E1E44FDB400635002 /* MAURLImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAURLImageSourceModel.m; sourceTree = "<group>"; };
+		79535B501E44FDB400635002 /* MAFileImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAFileImageSourceModel.h; sourceTree = "<group>"; };
+		79535B511E44FDB400635002 /* MAFileImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAFileImageSourceModel.m; sourceTree = "<group>"; };
+		79535B531E44FDB400635002 /* MAAssetImageSourceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAAssetImageSourceModel.h; sourceTree = "<group>"; };
+		79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAssetImageSourceModel.m; sourceTree = "<group>"; };
+		79535B551E44FDB400635002 /* MAImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageSource.h; sourceTree = "<group>"; };
 		79E71C0C1E44F4D60066B4D1 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,8 +157,8 @@
 		7902F1AB1E30E6FD00017320 /* Producer */ = {
 			isa = PBXGroup;
 			children = (
-				7902F1AC1E30E6FD00017320 /* MAImageDescriptionOperation.h */,
-				7902F1AD1E30E6FD00017320 /* MAImageDescriptionOperation.m */,
+				7902F1AC1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.h */,
+				7902F1AD1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m */,
 				7902F1AE1E30E6FD00017320 /* MAImageProducer.h */,
 				7902F1AF1E30E6FD00017320 /* MAImageProducer.m */,
 			);
@@ -168,13 +168,10 @@
 		7902F1B01E30E6FD00017320 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				7902F1B11E30E6FD00017320 /* MAAssetImageSourceModel.h */,
-				7902F1B21E30E6FD00017320 /* MAAssetImageSourceModel.m */,
-				7902F1B31E30E6FD00017320 /* MAFileImageSourceModel.h */,
-				7902F1B41E30E6FD00017320 /* MAFileImageSourceModel.m */,
-				7902F1B51E30E6FD00017320 /* MAImageSource.h */,
-				7902F1B61E30E6FD00017320 /* MAURLImageSourceModel.h */,
-				7902F1B71E30E6FD00017320 /* MAURLImageSourceModel.m */,
+				79535B4C1E44FDB400635002 /* URL */,
+				79535B4F1E44FDB400635002 /* File */,
+				79535B521E44FDB400635002 /* PHAsset */,
+				79535B551E44FDB400635002 /* MAImageSource.h */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -214,6 +211,33 @@
 				79535B431E44F87200635002 /* MACornerImageTransformation.m */,
 			);
 			path = CornerRadius;
+			sourceTree = "<group>";
+		};
+		79535B4C1E44FDB400635002 /* URL */ = {
+			isa = PBXGroup;
+			children = (
+				79535B4D1E44FDB400635002 /* MAURLImageSourceModel.h */,
+				79535B4E1E44FDB400635002 /* MAURLImageSourceModel.m */,
+			);
+			path = URL;
+			sourceTree = "<group>";
+		};
+		79535B4F1E44FDB400635002 /* File */ = {
+			isa = PBXGroup;
+			children = (
+				79535B501E44FDB400635002 /* MAFileImageSourceModel.h */,
+				79535B511E44FDB400635002 /* MAFileImageSourceModel.m */,
+			);
+			path = File;
+			sourceTree = "<group>";
+		};
+		79535B521E44FDB400635002 /* PHAsset */ = {
+			isa = PBXGroup;
+			children = (
+				79535B531E44FDB400635002 /* MAAssetImageSourceModel.h */,
+				79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */,
+			);
+			path = PHAsset;
 			sourceTree = "<group>";
 		};
 		79E71C0B1E44F4D60066B4D1 /* Resources */ = {
@@ -302,13 +326,13 @@
 				7902F1831E30E69800017320 /* AppDelegate.m in Sources */,
 				79535B441E44F87200635002 /* MACornerImageTransformation.m in Sources */,
 				7902F1BF1E30E6FD00017320 /* MAImageDescription.m in Sources */,
-				7902F1C41E30E6FD00017320 /* MAURLImageSourceModel.m in Sources */,
+				79535B571E44FDB400635002 /* MAFileImageSourceModel.m in Sources */,
 				7902F1C51E30E6FD00017320 /* MAImageView.m in Sources */,
+				79535B581E44FDB400635002 /* MAAssetImageSourceModel.m in Sources */,
+				79535B561E44FDB400635002 /* MAURLImageSourceModel.m in Sources */,
 				7902F1C11E30E6FD00017320 /* MAImageProducer.m in Sources */,
-				7902F1C31E30E6FD00017320 /* MAFileImageSourceModel.m in Sources */,
-				7902F1C01E30E6FD00017320 /* MAImageDescriptionOperation.m in Sources */,
+				7902F1C01E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m in Sources */,
 				7902F1801E30E69800017320 /* main.m in Sources */,
-				7902F1C21E30E6FD00017320 /* MAAssetImageSourceModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
