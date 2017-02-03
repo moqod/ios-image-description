@@ -10,8 +10,6 @@
 #import "MAImageHelper.h"
 #import "MAErrors.h"
 
-static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
-
 @interface MAURLImageSourceModel () <NSURLSessionDelegate>
 
 @property (nonatomic, copy) void (^completion)(UIImage *, NSError *);
@@ -20,36 +18,29 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
 
 @implementation MAURLImageSourceModel
 
-+ (void)initialize {
-    if (!MAURLImageSourceModelDestinationFolderPath) {
-        MAURLImageSourceModelDestinationFolderPath = NSTemporaryDirectory();
-    }
-}
-
-+ (void)setDestinationDirectoryPath:(NSString *)destinationDirectoryPath {
-    if (destinationDirectoryPath) {
-        MAURLImageSourceModelDestinationFolderPath = destinationDirectoryPath;
-    }
-}
+#pragma mark - inititalization
 
 - (instancetype)initWithURL:(NSURL *)url {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _url = url;
-        
-        // file paths
-        self.destinationDirectoryPath = MAURLImageSourceModelDestinationFolderPath;
-        self.imageFileName = [self.url lastPathComponent];
     }
     return self;
 }
 
-- (NSString *)sourceName {
-    return self.imageFileName;
++ (instancetype)sourceWithURL:(NSURL *)url {
+    return [[self alloc] initWithURL:url];
 }
 
+#pragma mark - helpers
+
 - (NSString *)cachedImageFilePath {
-    return [self.destinationDirectoryPath stringByAppendingPathComponent:self.sourceName];
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:self.url.lastPathComponent];
+}
+
+#pragma mark - MAImageSource
+
+- (NSString *)sourceName {
+    return [NSString stringWithFormat:@"url_%@", self.url.lastPathComponent];
 }
 
 // block to return UIImage
@@ -85,7 +76,7 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     }
 }
 
-#pragma mark -
+#pragma mark - helpers
 
 - (void)loadImageAndCallCompletion {
     // TODO: support `file://` protocol
@@ -116,13 +107,14 @@ static NSString *MAURLImageSourceModelDestinationFolderPath = nil;
     }
 }
 
+#pragma mark - equatability
 
-- (BOOL)isEqualToImageSource:(id<MAImageSource>)model {
+- (BOOL)isEqualToImageSource:(MAURLImageSourceModel *)model {
     if ([model isKindOfClass:self.class]) {
-        MAURLImageSourceModel *urlModel = (id)model;
-        return [urlModel.url.absoluteString isEqualToString:self.url.absoluteString];
+        return [model.url.absoluteString isEqualToString:self.url.absoluteString];
+    } else {
+        return NO;
     }
-    return NO;
 }
 
 @end
