@@ -17,12 +17,13 @@
 		7902F1BF1E30E6FD00017320 /* MAImageDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AA1E30E6FD00017320 /* MAImageDescription.m */; };
 		7902F1C01E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AD1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m */; };
 		7902F1C11E30E6FD00017320 /* MAImageProducer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1AF1E30E6FD00017320 /* MAImageProducer.m */; };
-		7902F1C51E30E6FD00017320 /* MAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1BA1E30E6FD00017320 /* MAImageView.m */; };
+		7902F1C51E30E6FD00017320 /* MAImageView_Old.m in Sources */ = {isa = PBXBuildFile; fileRef = 7902F1BA1E30E6FD00017320 /* MAImageView_Old.m */; };
 		79535B441E44F87200635002 /* MACornerImageTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B431E44F87200635002 /* MACornerImageTransformation.m */; };
 		79535B471E44F9AC00635002 /* MAResizeImageTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B461E44F9AC00635002 /* MAResizeImageTransformation.m */; };
 		79535B561E44FDB400635002 /* MAURLImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B4E1E44FDB400635002 /* MAURLImageSourceModel.m */; };
 		79535B571E44FDB400635002 /* MAFileImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B511E44FDB400635002 /* MAFileImageSourceModel.m */; };
 		79535B581E44FDB400635002 /* MAAssetImageSourceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */; };
+		79535B5F1E4C9DB700635002 /* MAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79535B5E1E4C9DB700635002 /* MAImageView.m */; };
 		79E71C0D1E44F4D60066B4D1 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 79E71C0C1E44F4D60066B4D1 /* image.png */; };
 /* End PBXBuildFile section */
 
@@ -45,8 +46,8 @@
 		7902F1AD1E30E6FD00017320 /* MAImageDescriptionLoadingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageDescriptionLoadingOperation.m; sourceTree = "<group>"; };
 		7902F1AE1E30E6FD00017320 /* MAImageProducer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageProducer.h; sourceTree = "<group>"; };
 		7902F1AF1E30E6FD00017320 /* MAImageProducer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageProducer.m; sourceTree = "<group>"; };
-		7902F1B91E30E6FD00017320 /* MAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageView.h; sourceTree = "<group>"; };
-		7902F1BA1E30E6FD00017320 /* MAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageView.m; sourceTree = "<group>"; };
+		7902F1B91E30E6FD00017320 /* MAImageView_Old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageView_Old.h; sourceTree = "<group>"; };
+		7902F1BA1E30E6FD00017320 /* MAImageView_Old.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageView_Old.m; sourceTree = "<group>"; };
 		79535B3F1E44F79700635002 /* MAImageTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageTransformation.h; sourceTree = "<group>"; };
 		79535B421E44F87200635002 /* MACornerImageTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MACornerImageTransformation.h; sourceTree = "<group>"; };
 		79535B431E44F87200635002 /* MACornerImageTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MACornerImageTransformation.m; sourceTree = "<group>"; };
@@ -60,6 +61,8 @@
 		79535B541E44FDB400635002 /* MAAssetImageSourceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAssetImageSourceModel.m; sourceTree = "<group>"; };
 		79535B551E44FDB400635002 /* MAImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageSource.h; sourceTree = "<group>"; };
 		79535B591E4512D700635002 /* MAErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAErrors.h; sourceTree = "<group>"; };
+		79535B5D1E4C9DB700635002 /* MAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageView.h; sourceTree = "<group>"; };
+		79535B5E1E4C9DB700635002 /* MAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageView.m; sourceTree = "<group>"; };
 		79E71C0C1E44F4D60066B4D1 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,8 +184,10 @@
 		7902F1B81E30E6FD00017320 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7902F1B91E30E6FD00017320 /* MAImageView.h */,
-				7902F1BA1E30E6FD00017320 /* MAImageView.m */,
+				7902F1B91E30E6FD00017320 /* MAImageView_Old.h */,
+				7902F1BA1E30E6FD00017320 /* MAImageView_Old.m */,
+				79535B5D1E4C9DB700635002 /* MAImageView.h */,
+				79535B5E1E4C9DB700635002 /* MAImageView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -328,8 +333,9 @@
 				7902F1831E30E69800017320 /* AppDelegate.m in Sources */,
 				79535B441E44F87200635002 /* MACornerImageTransformation.m in Sources */,
 				7902F1BF1E30E6FD00017320 /* MAImageDescription.m in Sources */,
+				79535B5F1E4C9DB700635002 /* MAImageView.m in Sources */,
 				79535B571E44FDB400635002 /* MAFileImageSourceModel.m in Sources */,
-				7902F1C51E30E6FD00017320 /* MAImageView.m in Sources */,
+				7902F1C51E30E6FD00017320 /* MAImageView_Old.m in Sources */,
 				79535B581E44FDB400635002 /* MAAssetImageSourceModel.m in Sources */,
 				79535B561E44FDB400635002 /* MAURLImageSourceModel.m in Sources */,
 				7902F1C11E30E6FD00017320 /* MAImageProducer.m in Sources */,

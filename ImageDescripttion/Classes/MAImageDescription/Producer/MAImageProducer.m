@@ -61,6 +61,10 @@
     }
 }
 
+- (NSString *)notificationNameForImageDescription:(MAImageDescription *)imageDescription {
+    return imageDescription.imageFilePath;
+}
+
 #pragma mark - MAImageDescriptionLoadingOperationDelegate
 
 - (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didFailWithError:(NSError *)error forImageDescription:(MAImageDescription *)imageDescription {
@@ -68,14 +72,14 @@
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:error forKey:@"error"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:[self notificationNameForImageDescription:imageDescription] object:self userInfo:userInfo];
 }
 
 - (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription fromCache:(BOOL)fromCache {
     // send notification
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:image forKey:@"result"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:[self notificationNameForImageDescription:imageDescription] object:self userInfo:userInfo];
 }
 
 #pragma mark - queue stuff

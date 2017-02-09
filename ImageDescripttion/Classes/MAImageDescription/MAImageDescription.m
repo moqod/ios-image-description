@@ -14,6 +14,7 @@ NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionE
 
 @interface MAImageDescription ()
 
+@property (nonatomic, strong) id <MAImageSource>    sourceModel;
 @property (nonatomic, strong) NSArray               *transformations;
 
 @end
@@ -52,6 +53,17 @@ NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionE
 
 - (BOOL)isEqual:(MAImageDescription *)object {
     return [object isKindOfClass:[self class]] && [self.resultImageName isEqualToString:object.resultImageName];
+}
+
+#pragma mark - copying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MAImageDescription *instance = [[self class] allocWithZone:zone];
+    instance.transformations = self.transformations.mutableCopy;
+    instance.sourceModel = self.sourceModel;
+    instance.loadingQueueAlias = self.loadingQueueAlias.copy;
+    instance.imageFilePath = self.imageFilePath.copy;
+    return instance;
 }
 
 @end

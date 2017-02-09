@@ -17,4 +17,6 @@
 - (void)produceImageWithDescription:(MAImageDescription *)imageDescription;
 - (void)cancelProducingImageWithDescription:(MAImageDescription *)imageDescription;
 
+- (NSString *)notificationNameForImageDescription:(MAImageDescription *)imageDescription;
+
 @end

@@ -1,73 +1,78 @@
 //
 //  MAImageView.m
-//  ImageDescription
+//  ImageDescripttion
 //
-//  Created by Andrew Kopanev on 8/5/15.
-//  Copyright (c) 2015 MQD B.V. All rights reserved.
+//  Created by Andrew Kopanev on 2/9/17.
+//  Copyright © 2017 MQD BV. All rights reserved.
 //
 
 #import "MAImageView.h"
+
+#import "MAResizeImageTransformation.h"
 #import "MAImageProducer.h"
 
 @interface MAImageView ()
 
-@property (nonatomic, readonly) UIImageView     *placeholderImageView;
-@property (nonatomic, readonly) UIImageView     *originalImageView;
-@property (nonatomic, assign) BOOL              showImageAnimated;
+@property (nonatomic, readonly) UIImageView         *placeholderImageView;
+@property (nonatomic, readonly) UIImageView         *resultImageView;
+
+@property (nonatomic, strong) MAImageDescription    *realImageDescription;
+
+@property (nonatomic, assign) BOOL                  showImageAnimated;
 
 @end
 
 @implementation MAImageView
 
-
 #pragma mark - notifications
 
-- (void)didLoadImageNotification:(NSNotification *)notification {
-    if (![notification.name isEqualToString:self.imageDescription.imageFilePath]) {
+- (void)imageNotification:(NSNotification *)notification {
+    // voiila!..
+    
+    // rare case but...
+    if (![notification.name isEqualToString:[[MAImageProducer defaultProducer] notificationNameForImageDescription:self.realImageDescription]]) {
         return; // skip outdated notifications
     }
+    
     [self handleImage:notification.userInfo[@"result"] error:notification.userInfo[@"error"] userInfo:notification.userInfo];
+    
+    // unsubscribe
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:[[MAImageProducer defaultProducer] notificationNameForImageDescription:self.realImageDescription] object:nil];
 }
 
 - (void)handleImage:(UIImage *)image error:(NSError *)error userInfo:(NSDictionary *)userInfo {
     if (image) {
-        self.image = image;
+        self.resultImageView.image = image;
         
         // seems like we don't need animation when image loaded from cache
-        BOOL showAnimated = self.showImageAnimated; // (self.showImageAnimated && ![userInfo[@"cache"] boolValue]);
-        if (showAnimated) {
-            self.originalImageView.alpha = 0.0;
-            [UIView animateWithDuration:0.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
+        // BOOL showAnimated = self.showImageAnimated; // (self.showImageAnimated && ![userInfo[@"cache"] boolValue]);
+        if (self.showImageAnimated) {
+            self.resultImageView.alpha = 0.0;
+            [UIView animateWithDuration:6.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
                              animations:^{
-                                 self.originalImageView.alpha = 1.0;
-                             } completion:nil];
+                                 self.resultImageView.alpha = 1.0;
+                             } completion:^(BOOL finished) {
+                                 self.placeholderImageView.alpha = 0.0;                                 
+                             }];
         } else {
-            self.originalImageView.alpha = 1.0;
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(imageViewDidLoadImage:)]) {
-            [self.delegate imageViewDidLoadImage:self];
+            self.resultImageView.alpha = 1.0;
         }
     } else {
-        if ([self.delegate respondsToSelector:@selector(imageView:didFailWithError:)]) {
-            [self.delegate imageView:self didFailWithError:error];
-        }
+        
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:self.imageDescription.imageFilePath object:nil];
 }
+
 
 #pragma mark - initialization
 
 - (void)innerInitialization {
-    self.automaticallyResizesImage = YES;
-    self.loadsCachedImagesAsynchronusly = YES;
-    self.hidesPlaceholderImage = NO;
+    self.updatesOnLayoutChanges = NO;
     
     _placeholderImageView = [UIImageView new];
     [self addSubview:self.placeholderImageView];
     
-    _originalImageView = [UIImageView new];
-    [self addSubview:self.originalImageView];
+    _resultImageView = [UIImageView new];
+    [self addSubview:self.resultImageView];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -88,103 +93,102 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - geometry
-
-
-- (void)setFrame:(CGRect)frame {
-    BOOL sizesIsEqual = CGSizeEqualToSize(self.frame.size, frame.size);
-    [super setFrame:frame];
-    
-    if (self.imageDescription && !sizesIsEqual && !CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
-        self.image = nil;
-        [self loadImageWithDescription];
-    }
-}
-
-#pragma mark -
-
-- (UIImage *)image {
-    return self.originalImageView.image ?: self.placeholderImage;
-}
-
-- (void)setImage:(UIImage *)image {
-    self.originalImageView.image = image;
-    
-    if (self.hidesPlaceholderImage) {
-        self.placeholderImageView.hidden = image ? YES : NO;
-    } else {
-        self.placeholderImageView.hidden = NO;
-    }
-}
+#pragma mark - placeholder image
 
 - (void)setPlaceholderImage:(UIImage *)placeholderImage {
     _placeholderImage = placeholderImage;
-    self.placeholderImageView.image = placeholderImage;
-    if (!self.originalImageView.image) {
-        self.placeholderImageView.hidden = NO;
-    }
+    self.placeholderImageView.image = _placeholderImage;
 }
 
-- (void)setHidesPlaceholderImage:(BOOL)hidesPlaceholderImage {
-    _hidesPlaceholderImage = hidesPlaceholderImage;
-    self.image = self.originalImageView.image;
-}
+#pragma mark - setters
 
-#pragma mark -
+- (void)setContentMode:(UIViewContentMode)contentMode {
+    [super setContentMode:contentMode];
+    self.placeholderImageView.contentMode = self.resultImageView.contentMode = contentMode;
+}
 
 - (void)setImageDescription:(MAImageDescription *)imageDescription {
     [self setImageDescription:imageDescription animated:NO];
 }
 
+- (void)setRealImageDescription:(MAImageDescription *)realImageDescription {
+    MAImageProducer *producer = [MAImageProducer defaultProducer];
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    
+    if (_realImageDescription) {
+        [notificationCenter removeObserver:self name:[producer notificationNameForImageDescription:_realImageDescription] object:nil];
+    }
+    _realImageDescription = realImageDescription;
+    if (_realImageDescription) {
+        [notificationCenter addObserver:self selector:@selector(imageNotification:) name:[producer notificationNameForImageDescription:_realImageDescription] object:nil];
+    }
+}
+
 - (void)setImageDescription:(MAImageDescription *)imageDescription animated:(BOOL)animated {
-    if (![_imageDescription.imageFilePath isEqualToString:imageDescription.imageFilePath]) {
-        
-        self.showImageAnimated = animated;
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:[_imageDescription imageFilePath] object:nil];
-        [[MAImageProducer defaultProducer] cancelProducingImageWithDescription:_imageDescription];
-        
-        _imageDescription = imageDescription;
-        self.image = nil;
-        
-        if (_imageDescription) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLoadImageNotification:) name:[_imageDescription imageFilePath] object:nil];
-            [self loadImageWithDescription];
-        }
+    _imageDescription = imageDescription;
+    self.showImageAnimated = animated;
+    
+    MAImageDescription *realImageDescription = [self realImageDescriptionForOriginalImageDescription:imageDescription];
+    if (realImageDescription && ![self.realImageDescription isEqual:realImageDescription]) {
+        self.realImageDescription = realImageDescription;
+        // load it I guess!..
+        [self loadImageDescription];
+    } else {
+        self.realImageDescription = nil;
     }
 }
 
-- (void)loadImageWithDescription {
-    if (self.imageDescription) {
-        // append size decorator here please!
-        if (self.automaticallyResizesImage) {
-            // TODO: insert resize decorator here please
-            // TODO: !!!
+#pragma mark - image loading
+
+- (void)loadImageDescription {
+    // reset current image?
+    self.resultImageView.image = nil;
+    
+    // show placeholder?
+    [[MAImageProducer defaultProducer] produceImageWithDescription:self.realImageDescription];
+}
+
+#pragma mark - helpers
+
+- (MAImageDescription *)realImageDescriptionForOriginalImageDescription:(MAImageDescription *)imageDescription {
+    if (self.updatesOnLayoutChanges) {
+        // remove existing resize transformation
+        NSMutableArray *transformations = [NSMutableArray array];
+        for (id <MAImageTransformation> transformation in imageDescription.transformations) {
+            if (![transformation isKindOfClass:[MAResizeImageTransformation class]]) {
+                [transformations addObject:transformation];
+            }
         }
         
-        if ([self.delegate respondsToSelector:@selector(imageViewWillLoadImage:)]) {
-            [self.delegate imageViewWillLoadImage:self];
+        // insert resize transformation
+        if (!CGSizeEqualToSize(CGSizeZero, self.bounds.size)) {
+            MAResizeImageTransformation *t = [MAResizeImageTransformation transformationWithSize:self.bounds.size];
+            [transformations insertObject:t atIndex:0];
         }
         
-        if (!self.loadsCachedImagesAsynchronusly && [[NSFileManager defaultManager] fileExistsAtPath:self.imageDescription.imageFilePath]) {
-            self.showImageAnimated = NO;
-            [self handleImage:[UIImage imageWithContentsOfFile:self.imageDescription.imageFilePath] error:nil userInfo:@{ @"cache" : @YES }];
-        } else {
-            [[MAImageProducer defaultProducer] produceImageWithDescription:self.imageDescription];
-        }
+        MAImageDescription *realDescription = [[MAImageDescription alloc] initWithSourceModel:imageDescription.sourceModel transformations:transformations];
+        realDescription.imageFilePath = imageDescription.imageFilePath.copy;
+        realDescription.loadingQueueAlias = imageDescription.loadingQueueAlias.copy;
+        return realDescription;
+    } else {
+        return imageDescription;
     }
 }
 
-#pragma mark -
+#pragma mark - layout
 
-- (void)setContentMode:(UIViewContentMode)contentMode {
-    [super setContentMode:contentMode];
-    self.placeholderImageView.contentMode = self.originalImageView.contentMode = contentMode;
+- (void)setFrame:(CGRect)frame {
+    BOOL sizesAreEqual = CGSizeEqualToSize(self.frame.size, frame.size);
+    [super setFrame:frame];
+    
+    if (!CGSizeEqualToSize(self.frame.size, CGSizeZero) && self.realImageDescription && !sizesAreEqual) {
+        [self setImageDescription:_imageDescription animated:self.showImageAnimated];
+    }
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.placeholderImageView.frame = self.originalImageView.frame = self.bounds;
+    self.resultImageView.frame = self.placeholderImageView.frame = self.bounds;
 }
 
 @end

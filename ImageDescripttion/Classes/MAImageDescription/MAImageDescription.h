@@ -14,10 +14,10 @@
  *  Describes an image source and transformations. 
  *  Complex images with inline caching in just a few code lines. Lovely!
  */
-@interface MAImageDescription : NSObject
+@interface MAImageDescription : NSObject <NSCopying>
 
 // Image source (file, URL, other)
-@property (nonatomic, strong) id <MAImageSource>                    sourceModel;
+@property (nonatomic, readonly) id <MAImageSource>                    sourceModel;
 
 // Transformations, could be nil
 @property (nonatomic, readonly) NSArray                             *transformations;

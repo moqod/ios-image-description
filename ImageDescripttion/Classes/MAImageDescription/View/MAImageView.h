@@ -1,40 +1,24 @@
 //
 //  MAImageView.h
-//  ImageDescription
+//  ImageDescripttion
 //
-//  Created by Andrew Kopanev on 8/5/15.
-//  Copyright (c) 2015 MQD B.V. All rights reserved.
+//  Created by Andrew Kopanev on 2/9/17.
+//  Copyright © 2017 MQD BV. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "MAImageDescription.h"
 
-@class MAImageView;
-@protocol MAImageViewDelegate <NSObject>
+@interface MAImageView : UIView
 
-@optional
-- (void)imageViewWillLoadImage:(MAImageView *)imageView;
-- (void)imageViewDidLoadImage:(MAImageView *)imageView;
-- (void)imageView:(MAImageView *)imageView didFailWithError:(NSError *)error;
+@property (nonatomic, strong) MAImageDescription    *imageDescription;
+@property (nonatomic, strong) UIImage               *placeholderImage;
 
-@end
+// If YES then the view adds (or replaces if exist) resize transformation on frame changes and reproduce an image
+// Default is NO
+@property (nonatomic, assign) BOOL                  updatesOnLayoutChanges;
 
-@interface MAImageView : UIImageView
-
-@property (nonatomic, strong) UIImage       *placeholderImage;
-@property (nonatomic, weak) id <MAImageViewDelegate>delegate;
-
-// Defaults to YES
-@property (nonatomic, assign) BOOL                          loadsCachedImagesAsynchronusly;
-
-// Defaults to NO
-@property (nonatomic, assign) BOOL                          hidesPlaceholderImage;
-
-
-// default is YES
-@property (nonatomic, assign) BOOL          automaticallyResizesImage;
-
-@property (nonatomic, strong) MAImageDescription        *imageDescription;
+// Uses simple fade animation
 - (void)setImageDescription:(MAImageDescription *)imageDescription animated:(BOOL)animated;
 
 @end
