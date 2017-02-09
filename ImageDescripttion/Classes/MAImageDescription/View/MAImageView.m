@@ -51,14 +51,18 @@
             [UIView animateWithDuration:6.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
                              animations:^{
                                  self.resultImageView.alpha = 1.0;
+                                 if (self.hidesPlaceholderImage) {
+                                     self.placeholderImageView.alpha = 0.0;
+                                 }
                              } completion:^(BOOL finished) {
-                                 self.placeholderImageView.alpha = 0.0;                                 
+                                 //
                              }];
         } else {
             self.resultImageView.alpha = 1.0;
+            self.placeholderImageView.alpha = 0.0;
         }
     } else {
-        
+        // ?! error ?!
     }
 }
 
@@ -67,6 +71,7 @@
 
 - (void)innerInitialization {
     self.updatesOnLayoutChanges = NO;
+    self.hidesPlaceholderImage = YES;
     
     _placeholderImageView = [UIImageView new];
     [self addSubview:self.placeholderImageView];
@@ -100,7 +105,11 @@
     self.placeholderImageView.image = _placeholderImage;
 }
 
-#pragma mark - setters
+#pragma mark - setters & getters
+
+- (UIImage *)image {
+    return self.resultImageView.image;
+}
 
 - (void)setContentMode:(UIViewContentMode)contentMode {
     [super setContentMode:contentMode];
@@ -141,10 +150,11 @@
 #pragma mark - image loading
 
 - (void)loadImageDescription {
-    // reset current image?
-    self.resultImageView.image = nil;
+    NSLog(@"%@", self.realImageDescription.transformations);
     
-    // show placeholder?
+    self.resultImageView.image = nil;
+    self.placeholderImageView.alpha = 1.0;
+
     [[MAImageProducer defaultProducer] produceImageWithDescription:self.realImageDescription];
 }
 
@@ -167,7 +177,6 @@
         }
         
         MAImageDescription *realDescription = [[MAImageDescription alloc] initWithSourceModel:imageDescription.sourceModel transformations:transformations];
-        realDescription.imageFilePath = imageDescription.imageFilePath.copy;
         realDescription.loadingQueueAlias = imageDescription.loadingQueueAlias.copy;
         return realDescription;
     } else {

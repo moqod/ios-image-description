@@ -36,7 +36,7 @@
                               };
     
     for (NSNumber *number in mapping.allKeys) {
-        if (corners && number.integerValue) {
+        if (corners & number.integerValue) {
             [string appendString:mapping[number]];
         }
     }
@@ -66,6 +66,12 @@
         }
         return drawnImage;
     }
+}
+
+#pragma mark -
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %@>", [super description], self.transformationName];
 }
 
 @end

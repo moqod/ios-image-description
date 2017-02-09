@@ -60,4 +60,10 @@
     }
 }
 
+#pragma mark -
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %@>", [super description], self.transformationName];
+}
+
 @end
