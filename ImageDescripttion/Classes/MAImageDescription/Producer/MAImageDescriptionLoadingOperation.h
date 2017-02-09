@@ -12,7 +12,7 @@
 @protocol MAImageDescriptionLoadingOperationDelegate <NSObject>
 
 @optional
-- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription;
+- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription fromCache:(BOOL)fromCache;
 - (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didFailWithError:(NSError *)error forImageDescription:(MAImageDescription *)imageDescription;
 
 @end

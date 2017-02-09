@@ -13,8 +13,9 @@
 extern NSString *const MAImageDescriptionErrorDomain;
 
 typedef NS_ENUM(NSInteger, MAImageDescriptionError) {
-    MASourceErrorFileDoesNotExist = 1,
-    MASourceErrorFileIsNotAnImage = 2,
+    MASourceErrorFileDoesNotExist   = 1,
+    MASourceErrorFileIsNotAnImage   = 2,
+    MASourceErrorCancelled          = 3,
 };
 
 #endif /* MAErrors_h */

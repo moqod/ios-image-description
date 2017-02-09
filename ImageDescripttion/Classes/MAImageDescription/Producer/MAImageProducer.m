@@ -71,7 +71,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:imageDescription.imageFilePath object:self userInfo:userInfo];
 }
 
-- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription {
+- (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription fromCache:(BOOL)fromCache {
     // send notification
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:image forKey:@"result"];
