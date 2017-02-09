@@ -45,7 +45,7 @@
             if (!error) {
                 UIImage *decoratedImage = image;
                 for (id <MAImageTransformation> decorator in welf.imageDescription.transformations) {
-                    decoratedImage = [decorator applyTransformation:decoratedImage];
+                    decoratedImage = [decorator applyTransformationToImage:decoratedImage];
                 }
                 
                 // save decorated image
@@ -132,7 +132,7 @@
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                             UIImage *decoratedImage = image;
                             for (id <MAImageTransformation> decorator in self.transformations) {
-                                decoratedImage = [decorator applyTransformation:decoratedImage];
+                                decoratedImage = [decorator applyTransformationToImage:decoratedImage];
                             }
                             
                             // save decorated image

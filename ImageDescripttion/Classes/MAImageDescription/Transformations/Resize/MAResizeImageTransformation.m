@@ -45,7 +45,7 @@
     return [NSString stringWithFormat:@"%@%.0fx%.0f", [self resizeTypeName:self.resizeType], self.size.width, self.size.height];
 }
 
-- (UIImage *)applyTransformation:(UIImage *)image {
+- (UIImage *)applyTransformationToImage:(UIImage *)image {
     if (self.size.width > 0.0 && self.size.height > 0.0) {
         UIImage *decoratedImage = nil;
         if (self.resizeType == MAResizeAspectFill) {

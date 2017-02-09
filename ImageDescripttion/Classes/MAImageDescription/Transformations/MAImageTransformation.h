@@ -17,6 +17,6 @@
 @property (nonatomic, readonly) NSString        *transformationName;
 
 // Applies transformation and return result image
-- (UIImage *)applyTransformation:(UIImage *)sourceImage;
+- (UIImage *)applyTransformationToImage:(UIImage *)sourceImage;
 
 @end

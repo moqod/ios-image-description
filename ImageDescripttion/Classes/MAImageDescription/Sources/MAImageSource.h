@@ -12,7 +12,7 @@
 
 @property (nonatomic, readonly) NSString                    *sourceName;
 
-// Could perform action on background thread
+// Performs an action on background thread
 // Completion called on main thread
 - (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion;
 

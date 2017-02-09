@@ -49,7 +49,7 @@
     return [NSString stringWithFormat:@"corner_%.0f_%@", self.radius, [self stringForCorners:self.corners]];
 }
 
-- (UIImage *)applyTransformation:(UIImage *)sourceImage {
+- (UIImage *)applyTransformationToImage:(UIImage *)sourceImage {
     if (self.radius < 1.0 / [UIScreen mainScreen].scale) {
         // don't round unroundable radius :)
         return sourceImage;
