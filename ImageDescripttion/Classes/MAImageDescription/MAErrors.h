@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, MAImageDescriptionError) {
     MASourceErrorFileDoesNotExist   = 1,
     MASourceErrorFileIsNotAnImage   = 2,
     MASourceErrorCancelled          = 3,
+    MASourceErrorBadURL             = 4,
 };
 
 #endif /* MAErrors_h */

@@ -62,13 +62,16 @@
 }
 
 - (NSString *)notificationNameForImageDescription:(MAImageDescription *)imageDescription {
-    return imageDescription.imageFilePath;
+    NSString *path = NSTemporaryDirectory();
+    return [imageDescription.imageFilePath stringByReplacingOccurrencesOfString:path withString:@"img_"];
 }
 
 #pragma mark - MAImageDescriptionLoadingOperationDelegate
 
 - (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didFailWithError:(NSError *)error forImageDescription:(MAImageDescription *)imageDescription {
     // send notification
+    
+    NSLog(@"%s %@", __PRETTY_FUNCTION__, [self notificationNameForImageDescription:imageDescription]);
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:error forKey:@"error"];
@@ -77,6 +80,8 @@
 
 - (void)loadingOperation:(MAImageDescriptionLoadingOperation *)operation didLoadImage:(UIImage *)image forImageDescription:(MAImageDescription *)imageDescription fromCache:(BOOL)fromCache {
     // send notification
+    NSLog(@"%s %@", __PRETTY_FUNCTION__, [self notificationNameForImageDescription:imageDescription]);
+    
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:image forKey:@"result"];
     [[NSNotificationCenter defaultCenter] postNotificationName:[self notificationNameForImageDescription:imageDescription] object:self userInfo:userInfo];

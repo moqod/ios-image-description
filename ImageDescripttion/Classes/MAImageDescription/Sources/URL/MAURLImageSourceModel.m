@@ -33,20 +33,29 @@
 
 #pragma mark - helpers
 
+- (NSString *)filenameFromURL:(NSURL *)url {
+    // NAME_MAX == 255
+    const NSInteger maxLength = 128;
+    NSString *name = [url.path stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    if (name.length > maxLength) {
+        name = [name substringFromIndex:name.length - maxLength];
+    }
+    return name;
+}
+
 - (NSString *)cachedImageFilePath {
-    return [NSTemporaryDirectory() stringByAppendingPathComponent:self.url.lastPathComponent];
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:[self sourceName]];
 }
 
 #pragma mark - MAImageSource
 
 - (NSString *)sourceName {
-    return [NSString stringWithFormat:@"url_%@", self.url.lastPathComponent];
+    return [NSString stringWithFormat:@"url_%@", [self filenameFromURL:self.url]];
 }
 
 // block to return UIImage
 - (void)imageWithCompletion:(void (^)(UIImage *image, NSError *error))completion {
     self.completion = completion;
-    
     
     // TODO: support `file://` protocol
     // the app crashes because of this now, workaround implemented
@@ -55,24 +64,40 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self cachedImageFilePath]] || workaroundIsFile) {
         [self loadImageAndCallCompletion];
     } else {
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-        NSURLSessionDownloadTask *task = [session downloadTaskWithURL:self.url
-                                                    completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-                                                        if (!error) {
-                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:[self cachedImageFilePath]]) {
-                                                                [[NSFileManager defaultManager] removeItemAtPath:[self cachedImageFilePath] error:nil];
+        if (!self.url) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *error = [NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorBadURL userInfo:nil];
+                [self callCompletionWithImage:nil error:error completion:completion];
+            });
+        } else {
+            NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+            NSURLSessionDownloadTask *task = [session downloadTaskWithURL:self.url
+                                                        completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+                                                            
+                                                            if (error != nil) {
+                                                                NSLog(@"url == %@", self.url);
+                                                                NSLog(@"! path == %@", [self cachedImageFilePath]);;
+                                                                NSLog(@"error == %@", error);
                                                             }
-                                                            [[NSFileManager defaultManager] moveItemAtPath:location.path toPath:[self cachedImageFilePath] error:nil];
-                                                            [self loadImageAndCallCompletion];
-                                                        } else {
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                [self callCompletionWithImage:nil error:error completion:self.completion];
-                                                                //    self.completion = nil;
-                                                            });
-                                                        }
-                                                    }];
-        [task resume];
+                                                            
+                                                            
+                                                            if (!error) {
+                                                                if ([[NSFileManager defaultManager] fileExistsAtPath:[self cachedImageFilePath]]) {
+                                                                    [[NSFileManager defaultManager] removeItemAtPath:[self cachedImageFilePath] error:nil];
+                                                                }
+                                                                [[NSFileManager defaultManager] moveItemAtPath:location.path toPath:[self cachedImageFilePath] error:nil];
+                                                                [self loadImageAndCallCompletion];
+                                                            } else {
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    [self callCompletionWithImage:nil error:error completion:self.completion];
+                                                                    //    self.completion = nil;
+                                                                });
+                                                            }
+                                                        }];
+            
+            [task resume];
+        }
     }
 }
 

@@ -45,28 +45,30 @@
         } else {
             __weak typeof (self) welf = self;
             [self.imageDescription.sourceModel imageWithCompletion:^(UIImage *image, NSError *error) {
-                if (!self.isCancelled) {
-                    if (!error) {
-                        UIImage *decoratedImage = image;
-                        for (id <MAImageTransformation> decorator in welf.imageDescription.transformations) {
-                            decoratedImage = [decorator applyTransformationToImage:decoratedImage];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    if (!self.isCancelled) {
+                        if (!error) {
+                            UIImage *decoratedImage = image;
+                            for (id <MAImageTransformation> decorator in welf.imageDescription.transformations) {
+                                decoratedImage = [decorator applyTransformationToImage:decoratedImage];
+                            }
+                            
+                            // save decorated image
+                            [welf cacheResultImage:decoratedImage];
+                            
+                            // draw offscreen
+                            decoratedImage = [MAImageHelper offscreenDrawnImage:decoratedImage];
+                            
+                            [welf notifyDelegateDidLoadImage:decoratedImage fromCache:NO error:nil];
+                            [welf markOperationCompleted];
+                        } else {
+                            [welf notifyDelegateDidLoadImage:nil fromCache:NO error:error];
+                            [welf markOperationCompleted];
                         }
-                        
-                        // save decorated image
-                        [welf cacheResultImage:decoratedImage];
-                        
-                        // draw offscreen
-                        decoratedImage = [MAImageHelper offscreenDrawnImage:decoratedImage];
-                        
-                        [welf notifyDelegateDidLoadImage:decoratedImage fromCache:NO error:nil];
-                        [welf markOperationCompleted];
                     } else {
-                        [welf notifyDelegateDidLoadImage:nil fromCache:NO error:error];
-                        [welf markOperationCompleted];
+                        [welf cancelOperation];
                     }
-                } else {
-                    [welf cancelOperation];
-                }
+                });
             }];
         }
     } else {

@@ -28,7 +28,6 @@
 
 - (void)imageNotification:(NSNotification *)notification {
     // voiila!..
-    
     // rare case but...
     if (![notification.name isEqualToString:[[MAImageProducer defaultProducer] notificationNameForImageDescription:self.realImageDescription]]) {
         return; // skip outdated notifications
@@ -48,7 +47,7 @@
         // BOOL showAnimated = self.showImageAnimated; // (self.showImageAnimated && ![userInfo[@"cache"] boolValue]);
         if (self.showImageAnimated) {
             self.resultImageView.alpha = 0.0;
-            [UIView animateWithDuration:6.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
+            [UIView animateWithDuration:0.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
                              animations:^{
                                  self.resultImageView.alpha = 1.0;
                                  if (self.hidesPlaceholderImage) {
@@ -61,17 +60,23 @@
             self.resultImageView.alpha = 1.0;
             self.placeholderImageView.alpha = 0.0;
         }
+        
+        if ([self.delegate respondsToSelector:@selector(imageView:didLoadImageWithDescription:)]) {
+            [self.delegate imageView:self didLoadImageWithDescription:self.imageDescription];
+        }
     } else {
-        // ?! error ?!
+        if ([self.delegate respondsToSelector:@selector(imageView:didFailWithError:imageDescription:)]) {
+            [self.delegate imageView:self didFailWithError:error imageDescription:self.imageDescription];
+        }
     }
 }
-
 
 #pragma mark - initialization
 
 - (void)innerInitialization {
-    self.updatesOnLayoutChanges = NO;
+    self.updatesOnLayoutChanges = YES;
     self.hidesPlaceholderImage = YES;
+    self.clipsToBounds = YES;
     
     _placeholderImageView = [UIImageView new];
     [self addSubview:self.placeholderImageView];
@@ -121,6 +126,10 @@
 }
 
 - (void)setRealImageDescription:(MAImageDescription *)realImageDescription {
+    if (realImageDescription == _realImageDescription) {
+        return;
+    }
+    
     MAImageProducer *producer = [MAImageProducer defaultProducer];
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     
@@ -138,11 +147,12 @@
     self.showImageAnimated = animated;
     
     MAImageDescription *realImageDescription = [self realImageDescriptionForOriginalImageDescription:imageDescription];
+    NSLog(@"rimd == %@", realImageDescription);
     if (realImageDescription && ![self.realImageDescription isEqual:realImageDescription]) {
         self.realImageDescription = realImageDescription;
         // load it I guess!..
         [self loadImageDescription];
-    } else {
+    } else if (!imageDescription) {
         self.realImageDescription = nil;
     }
 }
@@ -150,8 +160,6 @@
 #pragma mark - image loading
 
 - (void)loadImageDescription {
-    NSLog(@"%@", self.realImageDescription.transformations);
-    
     self.resultImageView.image = nil;
     self.placeholderImageView.alpha = 1.0;
 
@@ -190,7 +198,7 @@
     BOOL sizesAreEqual = CGSizeEqualToSize(self.frame.size, frame.size);
     [super setFrame:frame];
     
-    if (!CGSizeEqualToSize(self.frame.size, CGSizeZero) && self.realImageDescription && !sizesAreEqual) {
+    if (self.updatesOnLayoutChanges && !CGSizeEqualToSize(self.frame.size, CGSizeZero) && self.realImageDescription && !sizesAreEqual) {
         [self setImageDescription:_imageDescription animated:self.showImageAnimated];
     }
 }

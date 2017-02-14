@@ -9,6 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "MAImageDescription.h"
 
+@class MAImageView;
+@protocol MAImageViewDelegate <NSObject>
+
+@optional
+- (void)imageView:(MAImageView *)imageView didLoadImageWithDescription:(MAImageDescription *)imageDescription;
+- (void)imageView:(MAImageView *)imageView didFailWithError:(NSError *)error imageDescription:(MAImageDescription *)imageDescription;
+
+// Progress in range 0..1
+- (void)imageView:(MAImageView *)imageView didUpdateProgress:(CGFloat)progress imageDescription:(MAImageDescription *)imageDescription;
+
+@end
+
 @interface MAImageView : UIView
 
 @property (nonatomic, strong) MAImageDescription    *imageDescription;
@@ -20,10 +32,13 @@
 @property (nonatomic, assign) BOOL                  hidesPlaceholderImage;
 
 // If YES then the view adds (or replaces if exist) resize transformation on frame changes and reproduce an image
-// Default is NO
+// Default is YES
 @property (nonatomic, assign) BOOL                  updatesOnLayoutChanges;
 
+// `nil` until loaded
 @property (nonatomic, readonly) UIImage             *image;
+
+@property (nonnull, weak) id <MAImageViewDelegate> delegate;
 
 // Uses simple fade animation
 - (void)setImageDescription:(MAImageDescription *)imageDescription animated:(BOOL)animated;
