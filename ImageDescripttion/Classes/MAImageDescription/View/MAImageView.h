@@ -38,7 +38,7 @@
 // `nil` until loaded
 @property (nonatomic, readonly) UIImage             *image;
 
-@property (nonnull, weak) id <MAImageViewDelegate> delegate;
+@property (nonatomic, weak) id <MAImageViewDelegate> delegate;
 
 // Uses simple fade animation
 - (void)setImageDescription:(MAImageDescription *)imageDescription animated:(BOOL)animated;

@@ -47,18 +47,11 @@
         // BOOL showAnimated = self.showImageAnimated; // (self.showImageAnimated && ![userInfo[@"cache"] boolValue]);
         if (self.showImageAnimated) {
             self.resultImageView.alpha = 0.0;
-            [UIView animateWithDuration:0.2 delay:0.0 options:0 //UIViewAnimationOptionBeginFromCurrentState
-                             animations:^{
-                                 self.resultImageView.alpha = 1.0;
-                                 if (self.hidesPlaceholderImage) {
-                                     self.placeholderImageView.alpha = 0.0;
-                                 }
-                             } completion:^(BOOL finished) {
-                                 //
-                             }];
+            [UIView animateWithDuration:0.2 animations: ^{
+                [self handleImageViewsTransparency];
+            }];
         } else {
-            self.resultImageView.alpha = 1.0;
-            self.placeholderImageView.alpha = 0.0;
+            [self handleImageViewsTransparency];
         }
         
         if ([self.delegate respondsToSelector:@selector(imageView:didLoadImageWithDescription:)]) {
@@ -71,18 +64,25 @@
     }
 }
 
+- (void)handleImageViewsTransparency {
+    self.resultImageView.alpha = 1.0;
+    if (self.hidesPlaceholderImage) {
+        self.placeholderImageView.alpha = 0.0;
+    }
+}
+
 #pragma mark - initialization
 
 - (void)innerInitialization {
-    self.updatesOnLayoutChanges = YES;
-    self.hidesPlaceholderImage = YES;
+    _updatesOnLayoutChanges = YES;
+    _hidesPlaceholderImage = YES;
     self.clipsToBounds = YES;
     
     _placeholderImageView = [UIImageView new];
-    [self addSubview:self.placeholderImageView];
+    [self addSubview:_placeholderImageView];
     
     _resultImageView = [UIImageView new];
-    [self addSubview:self.resultImageView];
+    [self addSubview:_resultImageView];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {

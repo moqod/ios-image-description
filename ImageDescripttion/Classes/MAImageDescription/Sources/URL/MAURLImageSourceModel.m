@@ -122,7 +122,6 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self callCompletionWithImage:image error:error completion:self.completion];
-        //    self.completion = nil;
     });
 }
 

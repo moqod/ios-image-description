@@ -10,12 +10,12 @@
 #import "MAFileImageSourceModel.h"
 
 // error domain
-NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionErrorDomain";
+NSString *const MAImageDescriptionErrorDomain = @"MAImageDescriptionErrorDomain";
 
 @interface MAImageDescription ()
 
-@property (nonatomic, strong) id <MAImageSource>    sourceModel;
-@property (nonatomic, strong) NSArray               *transformations;
+@property (nonatomic, strong) id <MAImageSource> sourceModel;
+@property (nonatomic, strong) NSArray <MAResizeImageTransformation *> *transformations;
 
 @end
 
@@ -23,26 +23,30 @@ NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionE
 
 #pragma mark - initialization
 
-- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel transformations:(NSArray *)transformations {
+- (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel transformations:(NSArray <MAResizeImageTransformation *> *)transformations {
     if (self = [super init]) {
-        self.transformations = transformations;
-        self.sourceModel = sourceModel;
-        self.loadingQueueAlias = @"default";
+        _transformations = transformations;
+        _sourceModel = sourceModel;
+        _loadingQueueAlias = @"default";
         
-        NSString *imageName = [self resultImageName];
-        self.imageFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:imageName];
+        NSString *imageName = [[self class] imageNameWithSourceMomdel:_sourceModel transformations:_transformations];
+        _imageFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:imageName];
     }
     return self;
 }
 
 #pragma mark - helpers
 
-- (NSString *)resultImageName {
-    NSMutableString *imageName = [NSMutableString stringWithString:self.sourceModel.sourceName ?: @""];
-    for (id <MAImageTransformation> transformation in self.transformations) {
++ (NSString *)imageNameWithSourceMomdel:(id <MAImageSource>)sourceModel transformations:(NSArray <MAResizeImageTransformation *> *)transformations {
+    NSMutableString *imageName = [NSMutableString stringWithString:sourceModel.sourceName ?: @""];
+    for (id <MAImageTransformation> transformation in transformations) {
         [imageName appendFormat:@"%@%@", imageName.length ? @"_" : @"", transformation.transformationName];
     }
     return imageName;
+}
+
+- (NSString *)resultImageName {
+    return [[self class] imageNameWithSourceMomdel:self.sourceModel transformations:self.transformations];
 }
 
 #pragma mark - equtability
@@ -59,10 +63,11 @@ NSString *const MAImageDescriptionErrorDomain            = @"MAImageDescriptionE
 
 - (id)copyWithZone:(NSZone *)zone {
     MAImageDescription *instance = [[self class] allocWithZone:zone];
-    instance.transformations = self.transformations.mutableCopy;
-    instance.sourceModel = self.sourceModel;
-    instance.loadingQueueAlias = self.loadingQueueAlias.copy;
-    instance.imageFilePath = self.imageFilePath.copy;
+    instance.transformations = [_transformations copy];
+    #warning Inherit MAImageSource from NSCopying and implement for all conforming classes
+    instance.sourceModel = _sourceModel;
+    instance.loadingQueueAlias = [_loadingQueueAlias copy];
+    instance.imageFilePath = [_imageFilePath copy];
     return instance;
 }
 
