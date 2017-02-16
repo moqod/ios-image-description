@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     
     CGRect rect = [UIScreen mainScreen].bounds;
     _imageView = [[MAImageView alloc] initWithFrame:CGRectInset(rect, 20.0f, 40.0f)];
@@ -33,7 +33,6 @@
     self.imageView.clipsToBounds = YES;
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.placeholderImage = [UIImage imageNamed:@"image.png"];
-   // self.imageView.delegate = self;
     [self.view addSubview:self.imageView];
     
     MAFileImageSourceModel *sourceModel = [MAFileImageSourceModel sourceWithImageNamed:@"hd_image.jpeg"];
@@ -50,12 +49,10 @@
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
     CGRect bounds = self.view.bounds;
     CGRect frame = CGRectMake(20.0, 40.0, bounds.size.width * [self random] * 0.4 + bounds.size.width * 0.5, bounds.size.height * [self random] * 0.4 + bounds.size.height * 0.5);
     
     self.imageView.frame = frame;
-    
 }
 
 @end

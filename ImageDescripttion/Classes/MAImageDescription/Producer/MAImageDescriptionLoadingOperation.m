@@ -47,10 +47,10 @@
             [self.imageDescription.sourceModel imageWithCompletion:^(UIImage *image, NSError *error) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     if (!self.isCancelled) {
+                        UIImage *decoratedImage = image;
                         if (!error) {
-                            UIImage *decoratedImage = image;
                             for (id <MAImageTransformation> decorator in welf.imageDescription.transformations) {
-                                decoratedImage = [decorator applyTransformationToImage:decoratedImage];
+                                decoratedImage = [decorator transformedImageWithImage:decoratedImage];
                             }
                             
                             // save decorated image
@@ -58,13 +58,9 @@
                             
                             // draw offscreen
                             decoratedImage = [MAImageHelper offscreenDrawnImage:decoratedImage];
-                            
-                            [welf notifyDelegateDidLoadImage:decoratedImage fromCache:NO error:nil];
-                            [welf markOperationCompleted];
-                        } else {
-                            [welf notifyDelegateDidLoadImage:nil fromCache:NO error:error];
-                            [welf markOperationCompleted];
                         }
+                        [welf notifyDelegateDidLoadImage:decoratedImage fromCache:NO error:error];
+                        [welf markOperationCompleted];
                     } else {
                         [welf cancelOperation];
                     }
@@ -144,7 +140,7 @@
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                             UIImage *decoratedImage = image;
                             for (id <MAImageTransformation> decorator in self.transformations) {
-                                decoratedImage = [decorator applyTransformationToImage:decoratedImage];
+                                decoratedImage = [decorator transformedImageWithImage:decoratedImage];
                             }
                             
                             // save decorated image

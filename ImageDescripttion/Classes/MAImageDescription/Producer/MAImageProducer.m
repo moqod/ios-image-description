@@ -28,7 +28,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.queuesDictionary = [NSMutableDictionary dictionary];
+        _queuesDictionary = [NSMutableDictionary dictionary];
     }
     return self;
 }

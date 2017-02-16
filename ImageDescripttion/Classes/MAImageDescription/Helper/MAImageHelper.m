@@ -32,20 +32,20 @@
 + (UIImage *)imageToFitSize:(CGSize)fitSize method:(MGImageResizingMethod)resizeMethod image:(UIImage *)image usePixels:(BOOL)usePixels {
     float imageScaleFactor = image.scale;
     
-    float sourceWidth = [image size].width * imageScaleFactor;
-    float sourceHeight = [image size].height * imageScaleFactor;
+    float sourceWidth = image.size.width * imageScaleFactor;
+    float sourceHeight = image.size.height * imageScaleFactor;
     float targetWidth = fitSize.width;
     float targetHeight = fitSize.height;
-    BOOL cropping = !(resizeMethod == MGImageResizeScale);
+    BOOL cropping = resizeMethod != MGImageResizeScale;
     
     // Calculate aspect ratios
     float sourceRatio = sourceWidth / sourceHeight;
     float targetRatio = targetWidth / targetHeight;
     
     // Determine what side of the source image to use for proportional scaling
-    BOOL scaleWidth = (sourceRatio <= targetRatio);
+    BOOL scaleWidth = sourceRatio <= targetRatio;
     // Deal with the case of just scaling proportionally to fit, without cropping
-    scaleWidth = (cropping) ? scaleWidth : !scaleWidth;
+    scaleWidth = cropping ? scaleWidth : !scaleWidth;
     
     // Proportionally scale source image
     float scalingFactor, scaledWidth, scaledHeight;

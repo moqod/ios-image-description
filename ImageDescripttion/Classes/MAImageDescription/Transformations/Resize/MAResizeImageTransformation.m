@@ -9,22 +9,27 @@
 #import "MAResizeImageTransformation.h"
 #import "MAImageHelper.h"
 
+NSString *NSStringFromMAResizeType(MAResizeType resizeType) {
+    switch (resizeType) {
+        case MAResizeAspectFill:
+            return @"fill";
+        case MAResizeAspectFit:
+            return @"fit";
+    }
+}
+
 @implementation MAResizeImageTransformation
 
 #pragma mark - initialization
 
 - (instancetype)init {
-    if (self = [super init]) {
-        self.size = CGSizeZero;
-        self.resizeType = MAResizeAspectFill;
-    }
-    return self;
+    return [self initWithSize:CGSizeZero resizeType:MAResizeAspectFill];
 }
 
 - (instancetype)initWithSize:(CGSize)size resizeType:(MAResizeType)resizeType {
-    if (self = [self init]) {
-        self.size = size;
-        self.resizeType = resizeType;
+    if (self = [super init]) {
+        _size = size;
+        _resizeType = resizeType;
     }
     return self;
 }
@@ -33,30 +38,23 @@
     return [[self alloc] initWithSize:size resizeType:MAResizeAspectFill];
 }
 
-#pragma mark - helpers
-
-- (NSString *)resizeTypeName:(MAResizeType)resizeType {
-    return resizeType == MAResizeAspectFill ? @"fill" : @"fit";
-}
-
 #pragma mark - MAImageTransformation
 
 - (NSString *)transformationName {
-    return [NSString stringWithFormat:@"%@%.0fx%.0f", [self resizeTypeName:self.resizeType], self.size.width, self.size.height];
+    return [NSString stringWithFormat:@"%@%.0fx%.0f", NSStringFromMAResizeType(self.resizeType), self.size.width, self.size.height];
 }
 
-- (UIImage *)applyTransformationToImage:(UIImage *)image {
-    if (self.size.width > 0.0 && self.size.height > 0.0) {
-        UIImage *decoratedImage = nil;
-        if (self.resizeType == MAResizeAspectFill) {
-            decoratedImage = [MAImageHelper imageCroppedToFitSize:self.size image:image];
-        } else {
-            decoratedImage = [MAImageHelper imageScaledToFitSize:self.size image:image];
-        }
-        return decoratedImage;
-    } else {
+- (UIImage *)transformedImageWithImage:(UIImage *)image {
+    if (CGSizeEqualToSize(self.size, CGSizeZero)) {
         NSLog(@"%s did nothing, size is empty!", __PRETTY_FUNCTION__);
         return image;
+    }
+    
+    switch (self.resizeType) {
+        case MAResizeAspectFill:
+            return [MAImageHelper imageCroppedToFitSize:self.size image:image];
+        case MAResizeAspectFit:
+            return [MAImageHelper imageScaledToFitSize:self.size image:image];
     }
 }
 

@@ -24,7 +24,7 @@
 - (instancetype)initWithFilePath:(NSString *)filePath {
     self = [super init];
     if (self) {
-        self.filePath = filePath;
+       _filePath = filePath;
     }
     return self;
 }
@@ -55,21 +55,21 @@
             fileExists = [[NSFileManager defaultManager] fileExistsAtPath:actualFilePath];
         }
         
+        NSError *error = !fileExists ? [NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorFileDoesNotExist userInfo:nil] : nil;
         if (!fileExists) {
-            NSLog(@"%s image does not exist at path == %@", __PRETTY_FUNCTION__, actualFilePath);
-            [self callCompletionOnMainThreadWithImage:nil
-                                                error:[NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorFileDoesNotExist userInfo:nil]
-                                           completion:completion];
-        } else {
-            UIImage *image = [[UIImage alloc] initWithContentsOfFile:actualFilePath];
-            if (!image) {
-                [self callCompletionOnMainThreadWithImage:nil
-                                                    error:[NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorFileIsNotAnImage userInfo:nil]
-                                               completion:completion];
-            } else {
-                [self callCompletionOnMainThreadWithImage:image error:nil completion:completion];
-            }
-        }});
+           NSLog(@"%s image does not exist at path == %@", __PRETTY_FUNCTION__, actualFilePath);
+        }
+        
+        UIImage *image = !error ? [[UIImage alloc] initWithContentsOfFile:actualFilePath] : nil;
+        
+        if (!image) {
+            error = [NSError errorWithDomain:MAImageDescriptionErrorDomain code:MASourceErrorFileIsNotAnImage userInfo:nil];
+        }
+        
+        [self callCompletionOnMainThreadWithImage:image
+                                            error:error
+                                       completion:completion];
+    });
 }
 
 - (void)callCompletionOnMainThreadWithImage:(UIImage *)image error:(NSError *)error completion:(void (^)(UIImage *image, NSError *error))completion {

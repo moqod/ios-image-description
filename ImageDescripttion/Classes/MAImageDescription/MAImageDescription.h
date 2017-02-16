@@ -10,6 +10,8 @@
 #import "MAImageTransformation.h"
 #import "MAErrors.h"
 
+@class MAResizeImageTransformation;
+
 /**
  *  Describes an image source and transformations. 
  *  Complex images with inline caching in just a few code lines. Lovely!
@@ -20,7 +22,7 @@
 @property (nonatomic, readonly) id <MAImageSource>                    sourceModel;
 
 // Transformations, could be nil
-@property (nonatomic, readonly) NSArray                             *transformations;
+@property (nonatomic, readonly) NSArray <MAResizeImageTransformation *>                             *transformations;
 
 // Default is `temporary_folder/sourceModel_transformation1_..._transformationN`
 // Set your own value if suitable
@@ -33,6 +35,6 @@
 
 // initialization
 - (instancetype)initWithSourceModel:(id <MAImageSource>)sourceModel
-                    transformations:(NSArray *)transformations;
+                    transformations:(NSArray <MAResizeImageTransformation *> *)transformations;
 
 @end
