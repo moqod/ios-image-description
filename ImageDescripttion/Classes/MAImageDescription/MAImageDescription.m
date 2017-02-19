@@ -59,13 +59,12 @@ NSString *const MAImageDescriptionErrorDomain = @"MAImageDescriptionErrorDomain"
     return [object isKindOfClass:[self class]] && [self.resultImageName isEqualToString:object.resultImageName];
 }
 
-#pragma mark - copying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
     MAImageDescription *instance = [[self class] allocWithZone:zone];
     instance.transformations = [_transformations copy];
-    #warning Inherit MAImageSource from NSCopying and implement for all conforming classes
-    instance.sourceModel = _sourceModel;
+    instance.sourceModel = [_sourceModel copyWithZone:zone];
     instance.loadingQueueAlias = [_loadingQueueAlias copy];
     instance.imageFilePath = [_imageFilePath copy];
     return instance;
