@@ -110,4 +110,12 @@
     return updatedFileName;
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MAFileImageSourceModel *instance = [[self class] allocWithZone:zone];
+    instance.filePath = _filePath;
+    return instance;
+}
+
 @end

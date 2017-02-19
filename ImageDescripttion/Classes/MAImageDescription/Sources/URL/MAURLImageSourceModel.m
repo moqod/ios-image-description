@@ -141,4 +141,15 @@
     }
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MAURLImageSourceModel *instance = [[self class] allocWithZone:zone];
+    instance->_url = _url;
+    
+    //not including completion block, as new copy instance will have it's own when asked for image with completion
+    
+    return instance;
+}
+
 @end

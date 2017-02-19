@@ -70,4 +70,17 @@
     }
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MAAssetImageSourceModel *instance = [[self class] allocWithZone:zone];
+    instance->_photoAsset = _photoAsset;
+    instance->_targetSize = _targetSize;
+    instance->_contentMode = _contentMode;
+    
+    //not including completion block, as new copy instance will have it's own when asked for image with completion
+    
+    return instance;
+}
+
 @end

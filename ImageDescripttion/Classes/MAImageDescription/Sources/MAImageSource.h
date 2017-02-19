@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MAImageSource <NSObject>
+@protocol MAImageSource <NSObject, NSCopying>
 
 @property (nonatomic, readonly) NSString                    *sourceName;
 
